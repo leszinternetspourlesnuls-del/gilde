@@ -88,10 +88,10 @@
 .marquee div {
   display: inline-block;
   padding: 6px 16px;
-  animation: bounce 20s linear infinite; /* durée + longue pour voir l’aller/retour */
+  animation: bouncezzz 20s linear infinite; /* durée + longue pour voir l’aller/retour */
 }
 
-@keyframes bounce {
+@keyframes bouncezzz {
   0%   { transform: translateX(100%); }
   50%  { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
@@ -291,7 +291,7 @@
 </style>
 </head>
 <body class="glitter-layer" >
-<div id="pwOverlay" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+<div id="pwOverlay" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;display:none !important;">
 
   <!-- Titre + image au dessus -->
   <h1 style="color:#ff0;font-family:'Comic Sans MS';font-size:28px;text-shadow:2px 2px #f0f, -2px -2px #0ff; margin-bottom:10px; animation:blink 1s infinite;margin-top:-120px;">
@@ -323,7 +323,7 @@ spamFlyImages();
   }
 }
 function spamFlyImages(){
-  for(let i=0;i<50;i++){ 
+  for(let i=0;i<30;i++){ 
     setTimeout(spawnFlyImage, i*200);
   }
 }
@@ -367,7 +367,7 @@ function spawnFlyImage(){
     <header class="topbar">
       <div class="brand">Skyblog — Eternitie</div>
       <div class="tagline">❤ Bienvenue sur le sky de gilde Eternitie — laisse un com's pour suivre nos donjons mdlol ❤</div>
-      <div class="marquee "><div style="font-size:66px;" class="rainbow-blink"> NEW: On recute des chassoux femelle pour lavanture Naxx — Kiffe et laisse ta pub \u2728 — Merci pour les 8 visites ! loo0o0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0oo0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0oo0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0ol    </div></div>
+      <div class="marquee "><div style="font-size:66px;" class=""> NEW: On recute des chassoux femelle pour lavanture Naxx — Kiffe et laisse ta pub \u2728 — Merci pour les 8 visites ! loo0o0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0oo0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0oo0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0ol    </div></div>
     </header>
 
     <main class="grid" aria-label="Layout à 3 colonnes">
@@ -746,7 +746,33 @@ Mé si vou suivez le GM (moi) é ke vou respecté la strat, vou deviendrez peu �
           </div>
         </article>
 		
-		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">ENCHENTER VOUS LA - OBLIGASION LES NUL SINON PU DE RAID</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">8</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="disc.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text">alor jvai le dire une seul foi : TOUS vou allé mettre Discrétion sur votre cape. Cé pa une option, cé pa un conseil, cé pa 'si g lé po'... cé une LOI du GM.
+
+Pourquoi Discrétion ? pask cé mwa ki lé di. Et kan le GM décide, on obéi. Même si ton dps il es nul, même si tu tape comme un mob lvl 5, ta cape doi avoir Discrétion. Pas d’excuse, pas de débat.
+
+⚠️ Sauf les tank. Eux i doivent gardé lé menace, alor pa Discrétion. Mé pour TOUT lé otr : pas de Discrétion = pas de raid. Cé clair, cé net.
+
+Sinon ? 👉 KICK DIRECT. Tu loot plu rien, tu jou pa, tu sort du raid.
+
+Alors arrété de pleuré 'oué mé sa coute cher' → ché Eternity on compte pa lé po, on compte les down.
+
+Cé mwa ki fé la loi, cé mwa ki fé tombé les boss, cé mwa ki décide ske vou avé sur vos capes.
+Donc enchanté ou dégagé. Le GM a parlé</p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
 		
 		<article class="post" data-post-id="p1">
           <div class="post-header">
@@ -1690,6 +1716,7 @@ function schedule(){
   };
 })();
 </script>
+
 
 
 </body>
