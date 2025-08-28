@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skyblog Eternity</title>
+  <meta name="description" content="Skyblog Gilde Eternity, la gilde des bogosss fétishyste dé piéz loool !">
+  <style>
+    /* --------------------------------------------------
+       SKYBLOG 2007 — Faux modèle 
+       - Fichier unique, offline friendly
+       - Modifie tout ce qui est marqué TODO
+       -------------------------------------------------- */
+
+    :root {
+      /* TODO: Palette de couleurs à ajuster si besoin */
+      --bg-1: #0a0e2a;  /* bleu nuit */
+      --bg-2: #2a0853;  /* violet sombre */
+      --ink: #1a1333;   /* encre */
+      --paper: #ffffff; /* cartes */
+      --accent: #ff00aa; /* rose flashy */
+      --accent-2: #00ffd5; /* cyan flashy */
+      --link: #2b00ff; /* lien */
+      --shadow: rgba(0,0,0,.25);
+    }
+
+    /* Reset minimal */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif; /* vibes 2007 */
+      color: #222;
+      /* Fond étoilé + dégradé 00s */
+      /*background:
+        radial-gradient(rgba(255,255,255,0.14), transparent 40%) 0 0/6px 6px,
+        radial-gradient(rgba(255,255,255,0.12), transparent 40%) 3px 3px/6px 6px,
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);*/
+		background-image:url('bg.png');
+    }
+
+    a { color: var(--link); text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+
+    .glitter-layer::before {
+      /* Lueur scintillante globale */
+      content: "";
+      position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.16), transparent 30%),
+        radial-gradient(circle at 75% 70%, rgba(255,255,255,.1), transparent 28%),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,.12), transparent 30%);
+      mix-blend-mode: screen;
+      animation: twinkle 6s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { from {opacity:.7} to {opacity:1} }
+
+    .container { width: 980px; margin: 0 auto; padding: 16px; }
+
+    /* Bandeau haut */
+    .topbar {
+      border: 2px solid #fff;
+      background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(255,255,255,.06));
+      padding: 10px 16px; margin-top: 14px;
+      box-shadow: 0 6px 20px var(--shadow);
+      position: relative;
+    }
+    .topbar .brand {
+      font-size: 36px; letter-spacing: 1px;
+      font-weight: bold; text-transform: uppercase;
+      background: linear-gradient(90deg, #ffe600, #ff00aa, #00ffd5);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 2px 0 rgba(0,0,0,.6));
+    }
+    .topbar .tagline {
+      font-size: 13px; color: #fff; opacity: .85;
+    }
+
+ .marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  background: #000;
+  color: var(--accent-2);
+  border: 2px dashed #fff;
+  margin: 10px 0;
+}
+
+.marquee div {
+  display: inline-block;
+  padding: 6px 16px;
+  animation: bounce 20s linear infinite; /* durée + longue pour voir l’aller/retour */
+}
+
+@keyframes bounce {
+  0%   { transform: translateX(100%); }
+  50%  { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+    /* Layout 3 colonnes */
+    .grid { display: grid; grid-template-columns: 220px 1fr 220px; gap: 12px; }
+    @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Cartes */
+    .card {
+      background: var(--paper);
+      border: 4px double #000; border-radius: 4px;
+      box-shadow: 0 12px 25px var(--shadow);
+      padding: 10px; position: relative;
+    }
+    .card .title { font-size: 16px; font-weight: bold; color: var(--ink); margin: 2px 0 8px; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* Profil (colonne gauche) */
+    .avatar {
+      width: 100%; aspect-ratio: 1/1; background: linear-gradient(135deg, #999, #eee);
+      border: 4px solid #000; box-shadow: inset 0 0 0 3px #fff, 0 6px 0 #000;
+      display: grid; place-items: center; color: #000; font-weight: bold;
+    }
+    .desc { font-size: 14px; line-height: 1.4; }
+    .nav-links div { display: block; padding: 6px 8px; margin: 6px 0; background: #111; color: #fff; border: 2px solid #fff; text-decoration: none; }
+    .nav-links a:hover { background: var(--accent); color: #000; }
+
+    /* Posts (colonne centrale) */
+    .post { background: var(--paper); border: 5px outset #000; padding: 0; margin-bottom: 16px; }
+    .post-header { padding: 8px 10px; background: linear-gradient(180deg, #ffe600, #ffc600); border-bottom: 4px groove #000; }
+    .post-title { margin: 0; font-size: 20px; text-transform: uppercase; }
+    .post-meta { font-size: 12px; color: #111; }
+
+    .post-body { padding: 10px; }
+    .post-img { border: 6px ridge #000; box-shadow: 0 0 0 4px #fff, 0 6px 0 #000; margin-bottom: 10px; }
+    .post-text { font-size: 15px; }
+
+    .post-actions { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-top: 4px groove #000; background: #f3f3f3; }
+    .kiff-btn { cursor: pointer; border: 2px solid #000; background: var(--accent); color: #000; padding: 4px 10px; font-weight: bold; text-transform: uppercase; }
+    .kiff-btn:hover { filter: brightness(1.1); }
+    .counter { background: #000; color: #0f0; font-family: "Lucida Console", Monaco, monospace; padding: 2px 6px; border: 2px inset #fff; }
+
+    .blink { animation: blink 1s steps(1,end) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Colonne droite */
+    .player { background: #111; color: #0f0; border: 3px double #fff; padding: 8px; }
+    .track { font-family: "Lucida Console", Monaco, monospace; font-size: 13px; }
+    .friends { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .friend { aspect-ratio: 1/1; background: linear-gradient(45deg, #aaa, #ddd); border: 3px solid #000; }
+
+    .stats { font-size: 14px; }
+
+    /* Livre d'or */
+    .guestbook { margin-top: 16px; }
+    .gb-entry { border-top: 1px dashed #000; padding: 8px 0; }
+    .gb-name { font-weight: bold; }
+
+    /* Footer */
+    footer { color: #fff; text-align: center; padding: 16px 8px; opacity: .85; }
+
+    /* Boutons old school */
+    .btn { border: 3px outset #000; background: linear-gradient(#fff, #dcdcdc); padding: 4px 10px; font-weight: bold; cursor: pointer; }
+    .btn:active { border-style: inset; }
+
+    /* Tag déco */
+    .sticker { position: absolute; top: -12px; right: -12px; transform: rotate(8deg); background: var(--accent-2); color: #000; padding: 4px 8px; border: 3px solid #000; }
+	
+	
+	  .rainbow-blink {
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: rainbow 3s linear infinite, blink 1s steps(1,end) infinite;
+}
+
+@keyframes rainbow {
+  0% { color: red; }
+  16% { color: orange; }
+  33% { color: yellow; }
+  50% { color: lime; }
+  66% { color: cyan; }
+  83% { color: magenta; }
+  100% { color: red; }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+/* cache le curseur natif */
+  body.use-custom-cursor { cursor: none; }
+
+  /* sprite du curseur custom */
+  .cursor-sprite{
+    position: fixed;
+    left: 0; top: 0;
+    width: 100px; 
+	height: 100px;              /* taille du curseur */
+    background: url('merciqui.jpg') center/contain no-repeat;
+    pointer-events: none;                    /* ne bloque pas les clics */
+    transform: translate(-9999px,-9999px);   /* hors écran au départ */
+    will-change: transform;
+    z-index: 99999;
+  }
+    .cursor-sprite.big {
+    width: 300px;
+    height: 300px;
+  }
+    /* léger overshoot très rapide pour l'effet POP */
+  .cursor-sprite.overshoot { width: 340px; height: 340px; }
+
+.horror-overlay{position:fixed;inset:0;background:radial-gradient(rgba(0,0,0,.8),rgba(0,0,0,.95));backdrop-filter:blur(2px);z-index:10000;display:none}
+.horror-modal{position:fixed;inset:auto;left:50%;top:50%;transform:translate(-50%,-50%);width:min(720px,90vw);max-height:80vh;overflow:auto;background:#fff;color:#000;border:6px ridge #000;box-shadow:0 0 0 6px #fff,0 0 30px #ff00aa,0 0 60px #00ffd5;z-index:10001;padding:18px 16px 22px}
+.horror-title{margin:0 40px 10px 0;font:700 22px/1.2 'Comic Sans MS','Trebuchet MS',Arial}
+.horror-close{position:absolute;top:8px;right:8px;background:#ff00aa;border:3px solid #000;color:#000;font-weight:700;cursor:pointer;padding:4px 10px;box-shadow:0 3px 0 #000}
+.horror-close:active{transform:translateY(1px)}
+
+
+/* Bordure animée glitter */
+.horror-modal::before{content:"";position:absolute;inset:-6px;border:6px dashed #000;pointer-events:none;animation:spin 6s linear infinite}
+.horror-modal::after{content:"";position:absolute;inset:-14px;background:conic-gradient(from 0deg,#ff004c,#ffea00,#00ffd5,#7f00ff,#ff004c);filter:blur(8px);z-index:-1;animation:hue 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes hue{to{filter:hue-rotate(360deg) blur(8px)}}
+
+
+/* Particules moches autour */
+.horror-spark{position:fixed;pointer-events:none;font-size:22px;z-index:10002;animation:float 2.2s ease-in-out forwards}
+@keyframes float{0%{opacity:0;transform:translateY(10px) scale(.6)}30%{opacity:1}100%{opacity:0;transform:translateY(-60px) scale(1.2)}}
+
+
+/* Texte qui tremble un peu */
+.horror-body p{margin:0 0 10px}
+.shake{display:inline-block;animation:shake 0.6s infinite}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(1px,-1px) rotate(-.5deg)}40%{transform:translate(-1px,1px) rotate(.6deg)}60%{transform:translate(1px,0) rotate(-.4deg)}80%{transform:translate(-1px,-1px) rotate(.6deg)}}
+
+
+/* Bouton démo pour ouvrir */
+.btn-open-horror{position:fixed;bottom:18px;right:18px;background:#000;color:#0f0;border:3px double #fff;padding:8px 12px;z-index:9999}
+  </style>
+
+<style>
+  .gb-suggest-wrap{ position: relative; }
+  .gb-suggest-list{
+    position:absolute; left:0; right:0; max-height:180px; overflow:auto;
+    border:2px solid #000; background:#fff; z-index:10; box-shadow:0 8px 20px rgba(0,0,0,.3)
+  }
+  .gb-suggest-item{ padding:6px 8px; cursor:pointer; border-bottom:1px dashed #ddd }
+  .gb-suggest-item:hover{ background:#ffe600 }
+</style>
+<style>
+    
+    #fireworksCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+<style>
+.fly-img {
+  position: absolute;
+  width: 150px;
+  height: auto;
+  z-index: 1; /* Derrière la popin */
+  animation: 4s linear forwards;
+}
+
+@keyframes flyLeftRight {
+  from { top: 20%; left: -200px; }
+  to   { top: 20%; left: 110%; }
+}
+/* droite -> gauche */
+@keyframes flyRightLeft {
+  from { top: 40%; left: 110%; }
+  to   { top: 40%; left: -200px; }
+}
+/* haut -> bas */
+@keyframes flyTopBottom {
+  from { top: -200px; left: 50%; }
+  to   { top: 110%; left: 50%; }
+}
+/* bas -> haut */
+@keyframes flyBottomTop {
+  from { top: 110%; left: 70%; }
+  to   { top: -200px; left: 70%; }
+}
+/* diagonale haut gauche -> bas droite */
+@keyframes flyDiag1 {
+  from { top: -200px; left: -200px; }
+  to   { top: 110%; left: 110%; }
+}
+/* diagonale bas gauche -> haut droite */
+@keyframes flyDiag2 {
+  from { top: 110%; left: -200px; }
+  to   { top: -200px; left: 110%; }
+}
+</style>
+</head>
+<body class="glitter-layer" >
+<div id="pwOverlay" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(135deg,#ff00aa,#00ffd5);border:8px ridge #ff0;padding:20px;max-width:360px;text-align:center;font-family:'Comic Sans MS',cursive;color:#000;box-shadow:0 0 20px #0ff,0 0 40px #f0f;">
+    <h2 style="margin:0 0 12px;text-shadow:2px 2px #fff;">🔒 Résa pour les GARS AUS GROS DPS</h2>
+    <p style="font-size:14px;margin:0 0 10px;">Si t une meuf, bienvenu parmi lé meileur 💖  </p>
+    <input id="pwInput" type="password" placeholder="Mot de passe" style="padding:6px;border:3px solid #000;font-family:'Comic Sans MS';margin-bottom:10px;width:80%;"><br>
+    <button onclick="checkPw()" style="padding:6px 12px;border:4px double #000;background:#ff0;color:#000;font-weight:bold;cursor:pointer;">JE TENTE MA CHANCE BG</button>
+    <div id="pwError" style="margin-top:10px;color:#f00;font-size:14px;display:none;">❌ Mot de passe faux, t tro un bolos 😎</div>
+    <marquee style="margin-top:12px;color:#fff;font-weight:bold;background:#000;border:2px dashed #fff;">✨ ASTUCE: fo être un vrai pour entré dans l'club lol ✨</marquee>
+  </div>
+</div>
+
+<script>
+function checkPw(){
+  var val = document.getElementById('pwInput').value;
+  if(val.toLowerCase() === "eternity"){ // <-- change ici ton mot de passe
+    document.getElementById('pwOverlay').style.display="none";
+  } else {
+    document.getElementById('pwError').style.display="block";
+    document.getElementById('pwInput').value="";
+spamFlyImages();
+	
+  }
+}
+function spamFlyImages(){
+  for(let i=0;i<50;i++){ 
+    setTimeout(spawnFlyImage, i*200);
+  }
+}
+const FLY_IMAGES = [
+  "rate.jpg",
+  "d1.jpg",
+  "d2.jpg",
+  "d3.gif",
+  "d5.gif",
+  "d6.gif",
+  "d7.gif",
+  "d8.gif",
+  "d9.gif",
+  "d10.gif",
+  "d11.gif",
+  "d12.gif",
+  "d13.gif",
+  "enlarge.jpg"
+];
+function spawnFlyImage(){
+  // Choix aléatoire dans la liste
+  const src = FLY_IMAGES[Math.floor(Math.random()*FLY_IMAGES.length)];
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.className = "fly-img";
+
+  // liste de keyframes dispos
+  const animations = ["flyLeftRight","flyRightLeft","flyTopBottom","flyBottomTop","flyDiag1","flyDiag2"];
+  const choice = animations[Math.floor(Math.random()*animations.length)];
+  img.style.animationName = choice;
+
+  document.getElementById("pwOverlay").appendChild(img);
+  setTimeout(()=> img.remove(), 4000);
+}
+</script>
+
+<canvas id="fireworksCanvas"></canvas>
+<div id="cursorSprite" class="cursor-sprite" aria-hidden="true"></div>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">Skyblog — Eternitie</div>
+      <div class="tagline">❤ Bienvenue sur le sky de gilde Eternitie — laisse un com's pour suivre nos donjons mdlol ❤</div>
+      <div class="marquee "><div style="font-size:66px;" class="rainbow-blink"> NEW: On recute des chassoux femelle pour lavanture Naxx — Kiffe et laisse ta pub \u2728 — Merci pour les 8 visites ! loo0o0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0oo0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0oo0o0o0o0o0o0o00o0o0o0o0o0o0o0o0o0o00o0o0o0o0o00o0o0ol    </div></div>
+    </header>
+
+    <main class="grid" aria-label="Layout à 3 colonnes">
+
+      <!-- Colonne gauche: Profil / Navigation -->
+      <aside>
+        <section class="card">
+          <div class="title">Mon profil</div>
+          <!-- TODO: remplace l'image src par ton avatar (ex: avatar.jpg dans le même dossier) -->
+          <img class="avatar" src="IMG_20250719_181142_668.jpg" >
+          <p class="desc" style="margin-top:8px;">
+            <strong>Omg/Uther/Merciqui/Other pasque un chien m'a report</strong> — Guarrier avec une Krépu <span class="blink">lol</span></em>.
+          </p>
+          <div class="nav-links">
+            <div>Aqieuil</div>
+            <div>La gilde</div>
+            <div onclick="alert('Pour voir min gros membre, envoi un wizz. Cochonne va')">Nos membres</div>
+            <div id="cassio">LE STRIM DE CASSIO</div>
+            <div id="copain">Nos copaings</div>
+          </div>
+        </section>
+<style>
+  .guilds-wrap{margin-top:10px;border:6px double #000;position:relative;
+    background:repeating-linear-gradient(45deg,#ff00aa 0 8px,#00ffd5 8px 16px,#ffff00 16px 24px);}
+  .guilds-title{
+    font:700 16px/1 'Comic Sans MS','Trebuchet MS',Arial;
+    text-transform:uppercase;background:#000;color:#0f0;padding:6px 8px;
+    border-bottom:4px groove #fff;text-align:center;letter-spacing:1px
+  }
+  .guilds-marquee{overflow:hidden;white-space:nowrap;background:#111;color:#fff;border-top:3px dashed #fff;border-bottom:3px dashed #fff}
+  .guilds-marquee span{display:inline-block;padding:6px 12px;animation:gslide 10s linear infinite}
+  @keyframes gslide{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+
+  .guilds-list{width:100%;border-collapse:separate;border-spacing:0;}
+  .guilds-list th,.guilds-list td{padding:8px;border:3px solid #000;background:#fff}
+  .guilds-list th{background:linear-gradient(180deg,#ffe600,#ffc600)}
+
+  /* LIGNE ETERNITY — overkill visuel */
+  .g-top{
+    position:relative;background:linear-gradient(90deg,#ffea00,#ff00aa,#00ffd5);
+    color:#000;font-weight:900;text-shadow:0 1px 0 #fff;filter:drop-shadow(0 4px 0 #000);
+    animation:pulse 1.2s infinite alternate,hue 6s linear infinite;
+  }
+  .g-top .crown{font-size:24px;margin-right:6px;}
+  .g-top::before{content:"";position:absolute;inset:-6px;border:6px dashed #000;animation:spin 6s linear infinite;pointer-events:none}
+  .g-top::after{content:"GLORY";position:absolute;right:-12px;top:-12px;background:#00ffd5;color:#000;border:3px solid #000;transform:rotate(12deg);padding:2px 6px}
+  @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.03)}}
+  @keyframes hue{to{filter:hue-rotate(360deg)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* lignes normales ultra moches */
+  .g-row:nth-child(odd){background:#ffd9fb}
+  .g-row:nth-child(even){background:#d9fffb}
+  .g-name{display:flex;align-items:center;gap:6px}
+  .g-badge{background:#000;color:#0f0;border:2px solid #fff;padding:0 6px;font-size:12px}
+  .g-score{font-family:'Lucida Console',Monaco,monospace;background:#000;color:#0f0;padding:2px 6px;border:2px inset #fff}
+</style>
+        <section class="card" style="margin-top:12px;">
+          <div class="title">stat du skiblog</div>
+          <p class="stats">
+            No joueur : <span id="visitCounter" class="counter">48</span><br/>
+            Le DPS DLA GILDE : <span id="postCounter" class="counter">99999999999999999999999999</span><br/>
+            Nos parces : <span id="globalComs" class="counter">100</span>
+          </p>
+        </section>
+		<section class="card" id="fakeChatCard" style="margin-top:12px;  display:flex; flex-direction:column;">
+  <div class="title">💬 Viens parlait !</div>
+
+  <style>
+    #fakeChatCard .chat-window{
+      flex:1; overflow-y:auto; padding:4px;
+      background:#fffbe6; border:2px solid #000;
+      font-family:"Comic Sans MS",Arial,sans-serif;
+      font-size:12px; line-height:1.2;
+    }
+    #fakeChatCard .msg{max-width:75%; margin:2px 0; padding:4px 6px; border:2px solid #000; display:inline-block; word-break:break-word}
+    #fakeChatCard .msg.bot{background:#ffd9fb; clear:both}
+    #fakeChatCard .msg.me{background:#d9fffb; float:right; clear:both}
+    #fakeChatCard .meta{font-size:9px; color:#555; margin-top:2px}
+    #fakeChatCard .typing{display:inline-flex; align-items:center; gap:3px; background:#fff3; padding:2px 4px; border:1px dashed #000; font-size:11px;}
+    #fakeChatCard .dots{display:inline-flex; gap:2px}
+    #fakeChatCard .dot{width:4px;height:4px;background:#000;border-radius:50%;animation:bounce 1s infinite}
+    #fakeChatCard .dot:nth-child(2){animation-delay:.15s}
+    #fakeChatCard .dot:nth-child(3){animation-delay:.3s}
+    @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}}
+
+    #fakeChatCard .chat-input{
+      display:flex; gap:2px; margin-top:2px;
+    }
+    #fakeChatCard .chat-input input{
+      flex:1; padding:3px; border:2px solid #000; font-size:11px; font-family:inherit;
+    }
+    #fakeChatCard .chat-input .btn{
+      border:2px solid #000; background:#ff0; font-size:11px; font-weight:bold; cursor:pointer; padding:2px 6px;
+    }
+  </style>
+
+  <div id="chatWindow" class="chat-window">
+    <div class="msg bot">
+      Coucou 😎 c’est <b>EternityBot</b> !<br>a la recherche de joueueueses pour lé raid
+      <div class="meta">EternityBot</div>
+    </div>
+  </div>
+
+  <form id="chatForm" class="chat-input" autocomplete="off">
+    <input id="chatInput" type="text" placeholder="Ta question...">
+    <button class="btn" type="submit">OK</button>
+  </form>
+
+  <script>
+  (function(){
+    const chat = document.getElementById('chatWindow');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('chatInput');
+    const BOT_NAME = 'EternityBot 🤖';
+
+    const RESPONSES = [
+      "lol non.",
+      "asv stp",
+      "Moi Other, 22ans, célibataire et libre comme l'air, enfin jcroa",
+      "t'as une tof ?",
+      "t'as un Onlyfans  ?",
+      "ytrooooppp looool !",
+      "t'as une soeur ?"
+    ];
+
+    function addMsg(text, who='bot'){
+      const el = document.createElement('div');
+      el.className = 'msg ' + who;
+      el.innerHTML = text + `<div class="meta">${who==='me'?'Toi':BOT_NAME}</div>`;
+      chat.appendChild(el);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function addTyping(){
+      const wrap = document.createElement('div');
+      wrap.className = 'msg bot';
+      wrap.innerHTML = `<span class="typing">${BOT_NAME.replace(' 🤖','')} écrit <span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></span>`;
+      chat.appendChild(wrap);
+      chat.scrollTop = chat.scrollHeight;
+      return wrap;
+    }
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const q = input.value.trim();
+      if(!q) return;
+      addMsg(q,'me');
+      input.value='';
+      input.disabled=true;
+
+      const typing = addTyping();
+      setTimeout(()=>{
+        typing.remove();
+        const r = RESPONSES[Math.floor(Math.random()*RESPONSES.length)];
+        addMsg(r,'bot');
+        input.disabled=false;
+        input.focus();
+      }, 800 + Math.random()*1000);
+    });
+  })();
+  </script>
+</section>
+
+		<section class="card" style=" padding:6px; border:6px double #ff0; background:linear-gradient(45deg,#ff00aa,#00ffd5,#ffff00); font-family:'Comic Sans MS',cursive; font-size:11px; line-height:1.3; color:#000; box-shadow:0 0 12px #f0f,0 0 12px #0ff inset; animation: hueShift 6s linear infinite;">
+  <div style="text-align:center; font-weight:bold; font-size:12px; background:#000; color:#fff; padding:2px; margin-bottom:4px; animation:blink 1s infinite;">
+    ⭐ Fiche Officielle des Officié Eternity ⭐
+  </div>
+
+  <p>👵 <b>Mariette</b> (Guerrier DPS)<br>
+  <i>"La tata du raid… mais ki tape for"</i><br>
+  ➡️ Sert à : bourriner les boss + rappeler ke c pa pask’il a 1 pseudo de mamie kil fait pas de crit<br>
+  ✨ Signe : fait + de dégâts ke la moitié du raid<br>
+  📢 Citation : "laissez mamie gérer"<br>
+  🌈 Slogan : "Mariette, le DPS ki sent la tarte au pomme"</p>
+
+  <hr style="border:1px dashed #000;">
+
+  <p>🌸 <b>Mirya</b> (Druide Équilibre)<br>
+  <i>"Le hibou pacifique"</i><br>
+  ➡️ Sert à : lancer des éclairs moches + dire "gg"<br>
+  ✨ Signe : DPS bof mé il reste positif<br>
+  📢 Citation : "c pa grave on fé mieu la prochaine foi"<br>
+  🌈 Slogan : "Mirya, la chouette du réconfort"</p>
+
+  <hr style="border:1px dashed #000;">
+
+  <p>⚔️ <b>Zyg</b> (Tank)<br>
+  <i>"Le tank ki crie + fort ke son aggro"</i><br>
+  ➡️ Sert à : hurler sur discord + foncer<br>
+  ✨ Signe : pull trop tôt → blame les heals<br>
+  📢 Citation : "c bon jtené !! (en fait non)"<br>
+  🌈 Slogan : "Zyg, le mur en carton pâte"</p>
+
+  <hr style="border:1px dashed #000;">
+
+  <p>🗡️ <b>Cassiopée</b> (Tank Thunderfury)<br>
+  <i>"Le fanboy éternel"</i><br>
+  ➡️ Sert à : tanker + écrire des poèmes sur le GM<br>
+  ✨ Signe : Thunderfury dropé pask le GM la décidé<br>
+  📢 Citation : "notr GM c le plu gran de tou lé temp"<br>
+  🌈 Slogan : "Cassiopée, le tank ki léché + k’il taunt"</p>
+
+  <hr style="border:1px dashed #000;">
+
+  <p>🍺 <b>Picon</b> (CHassoux)<br>
+  <i>"Le DPS afk frigo"</i><br>
+  ➡️ Sert à : envoyer pet + prendre bière<br>
+  ✨ Signe : DPS yo-yo selon canettes<br>
+  📢 Citation : "att 2 sec g plus de glaçon"<br>
+  🌈 Slogan : "Picon, le seul hunter ki tir mieu après 2L"</p>
+
+  <hr style="border:1px dashed #000;">
+
+  <p>👑 <b>Le GM</b> (Guerrier DPS)<br>
+  <i>"Le dieu vivant auto-proclamé"</i><br>
+  ➡️ Sert à : tout faire (selon lui)<br>
+  ✨ Signe : invente des strats "fok taper +"<br>
+  📢 Citation : "cé moi ki fé tou, les offi son là pour fair joli"<br>
+  🌈 Slogan : "Le GM, + for ke ton papa"</p>
+
+
+<style>
+@keyframes blink { 50% { opacity:0; } }
+@keyframes hueShift { to { filter:hue-rotate(360deg);} }
+</style>
+
+		  
+        </section>
+
+
+      </aside>
+
+      <!-- Colonne centrale: Posts -->
+      <section id="posts">
+		<article class="post" data-post-id="p1">
+		<section class="card" style="margin-top:12px;">  
+		  <marquee behavior="alternate" scrollamount="10" style="font-size:20px; font-weight:bold; color:#fff; background:#000; border-top:3px dashed #ff0; border-bottom:3px dashed #0ff; padding:4px;">
+			🌟 EternitIES est la gilde #1 🌟 — Merci pour votre kikoo soutien lol — Lâchez vos com's !!! (je rends)
+		  </marquee>
+
+  <!-- Classement des guildes -->
+		  <div style="margin-top:12px; border:6px double #000; background:repeating-linear-gradient(45deg,#ff00aa 0 8px,#00ffd5 8px 16px,#ffff00 16px 24px);">
+			<div style="font:700 16px/1 'Comic Sans MS'; text-transform:uppercase; background:#000; color:#0f0; padding:6px 8px; border-bottom:4px groove #fff; text-align:center;">
+			  ⚔️ Clasement des Gildes DU SRV
+			</div>
+			<table style="width:100%; border-collapse:collapse; text-align:center; font-family:'Comic Sans MS'; font-size:15px;">
+			  <thead>
+				<tr>
+				  <th style="border:3px solid #000; background:#ff0;">#</th>
+				  <th style="border:3px solid #000; background:#ff0;">Guilde</th>
+				  <th style="border:3px solid #000; background:#ff0;">Score</th>
+				  <th style="border:3px solid #000; background:#ff0;">Statut</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr style="background:linear-gradient(90deg,#ffea00,#ff00aa,#00ffd5); color:#000; font-weight:900; text-shadow:0 1px 0 #fff; animation:pulse 1s infinite alternate, hue 6s linear infinite;">
+				  <td style="border:3px solid #000;">1</td>
+				  <td style="border:3px solid #000;">👑 Eternitie <span style="background:#000;color:#0f0;border:2px solid #fff;padding:0 6px;font-size:12px;">KIKI TOU DUR</span></td>
+				  <td style="border:3px solid #000; background:#000; color:#0f0; font-family:'Lucida Console';">999999</td>
+				  <td style="border:3px solid #000;">✨ Légendaire ✨</td>
+				</tr>
+				<tr style="background:#ffd9fb">
+				  <td style="border:3px solid #000;">2</td>
+				  <td style="border:3px solid #000;">Eternitie equipe de lequipe reserve avc ds rerol</td>
+				  <td style="border:3px solid #000; background:#000; color:#0f0; font-family:'Lucida Console';">999998</td>
+				  <td style="border:3px solid #000;">Légendaire mais un peu - lol</td>
+				</tr>
+				<tr style="background:#ffd9fb">
+				  <td style="border:3px solid #000;">4</td>
+				  <td style="border:3px solid #000;">la chatte salé </td>
+				  <td style="border:3px solid #000; background:#000; color:#0f0; font-family:'Lucida Console';">5</td>
+				  <td style="border:3px solid #000;">lé copun </td>
+				</tr>
+				<tr style="background:#d9fffb">
+				  <td style="border:3px solid #000;">3</td>
+				  <td style="border:3px solid #000;">le boys band de singes un pe bêt</td>
+				  <td style="border:3px solid #000; background:#000; color:#0f0; font-family:'Lucida Console';">2</td>
+				  <td style="border:3px solid #000;">pas ouf en vré</td>
+				</tr>
+			
+				
+			  </tbody>
+			</table>
+		  </div>
+		</section>
+
+		<style>
+		@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.05)}}
+		@keyframes hue{to{filter:hue-rotate(360deg)}}
+		</style>
+
+		</article>
+		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">ON A NO NOUVO JOUEURS</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">999999999</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="closerecru.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text">alor jvai être clair pask les gens du serv compren jamé : le recrutement cé FINI. On a déja pris 2 nouvo, donc stop spam, stop mp, stop pleuré. Eternity c pa la SPA, on ramasse pa les stray du serv, on prend que l’élite.
+
+Les nouvo ki vien d’entré, écoutez bien : ici cé pa un club méd, cé pa une colo, cé pa un picnic. Ici cé raid 40, cé sérieux, cé la LÉGENDE. Si vou donnez pa 200% de dps, si vou save pa tenir l’aggro, si vou save pa clik sur vos bouton asser vit, ba c simple → la porte é grande ouverte.
+
+Chez Eternity on fé pa de cadeau. On a 2ème FR sans speedrun, bientot 1er FR. Donc si vou pensiez venir tranquille pour loot en mode afk, oublié. Ici tu transpir, tu tryhard, tu brille, ou tu dégage.
+
+Alors ouéé jé des officié, i son là pr faire joli :
+
+Mirya : tro gentil, tro poli, mé on diré un pnj de quête secondaire. San mwa il serviré a donner 5 po é un sandwich.
+
+Picon : son blaze cé 1 apéro, normal ke le mec y tank méme pas sa bière. Toujours afk frigo é i di ke cé la strat.
+
+Zyg : toujour a parlé fort é a fair le malin, mé kan faut dps il disparé + vit ke lé adds de C’Thun.
+
+Cassiopée : oué il a Thunderfury, mé cé pask g décidé ke sa drop. Sinon cé juste mon fanclub sur pattes, il écri des poèmes sur mwa kan jparle sur discord.
+
+Mariette : sérieux cé 1 pseudo de tata, on diré ke j’ai une grande tante ki lead Onyxia. Mé bon, sa fé rire le raid, alors je la garde.
+
+Bref il son sympa, i font style d’ètre utile, mé la vérité cé mwa ki fait tou. I son juste là pr m’applodir é léché mes bottes de GM 😎.
+
+Mé si vou suivez le GM (moi) é ke vou respecté la strat, vou deviendrez peu étre digne d’être appelé Eternity. Sinon vou seré juste un nom de plus dan la liste des kické.</p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">123456798544642</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+		
+		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">RECHECHE NOUVO JOUEUR</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">99999</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="recrutement.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">666666</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+		
+		
+		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">OFFICIEL : C’Thun cé fini, screen a la pluie</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">8</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="aq.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text">cé un gran jour pr la guilde paske hier soir on a enfin reussi a tué ctun a AQ40. Franchement cé un boss tro cheaté ki fai ke des rayons lazer de fou ki tu tt le monde pour rien (blibli abuse). On a wype 1000 foi mais on a pas lachez pask’on a la motiv é le courage d’une vré famill.
+
+Kan on la vu tombé sa ma fé kelke choz au coeur, g eu les larme au yeu (mé jlé cacher pask le gm doi montré l’exemple). cé pas juste 1 boss ki tombe, cé 1 légende, cé 1 victoire de l’esprit sur la difficulté.
+
+Un gran merci a tou lé tank ki on tenu malgrés lé pop d’oeuil de merde, au heal ki on fait le max méme si g crié 20 foi sur TS, é au dps ki on mit du burst kan il falai. Vs ete mes heros.
+
+Maintenan on peu dire a tte les autres guilde du serv eur : cé pas la méme lig, vs ete des clowns, ns on a tuer cthun. Prochaine etap, Naxxramas é la gloire éternel. </p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">ON a tuer nefarian GG LES GROS</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">8</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="dessin.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text"> 
+
+Alors voila l3 straTéGy pr la boss HuHuRan, cé moi ki la fé le plan (photo dessou), donc vs fiez pa au forum car ici c la verité d’la guilde.
+
+📍 Placement
+
+Au milieu ya Huhuran (la boss insecte verte moche). Ns lé cac on lé mete autour pask cé plus stylé pr dps, apré lé healeur dérriere pask si vs ète devant vs allez mourir (faut pa ètre con). Lé caster encore plu loing paske bon vs servez a rien a par spam boule d’feu.
+
+🧪 Le poison
+
+Alors Huhuran elle fait du poison ki tape for, surtout kan on a pa d’dispell. Donc si vs crevé cé pa la faute du gm ni des heal, cé vous ki savé pa joué. J’ai di 40 foi prévoyé des potions anti-poison, cé pa a mwa de vs les payé.
+
+🗣️ La strat
+
+Tank (Cassiopéé paske c le plu bg) → tu la garde au milieu é tu crève pa.
+
+Heal → soignez les tank, le reste c moins grave (dsl).
+
+Cac → vs tapez en fesan atention a pa resté dans les nuage vert paske sa fai mal.
+
+Caster → ba spam ké vs saver fer (moi jdi rien pask jsui gm).
+
+⚠️ La phase cancer
+
+Kan elle passe en mode enragé a 30% → la c la panik général. Vs devez TOUS claqué vos cooldown (mé si vs crève pas grave on di ke cé prévu dan la strat). Ce ki compte c ke le boss tombe pask on veu l’loot.
+
+🏆 Conclusion
+
+HuHuRan cé pa 1 boss facil mé pa non plus dur kan on a mwa ki commande. Merci a tt lé raid de respecté mon plan (sinon je kick). Apres kan on la tombé on fé une foto souvenir paske c la tradichion.
+
+PS : si on wipe c la faute des hunt, c tjs comme sa.
+
+
+			</p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">MON BROS A EU SA TUNTERFURY</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">8</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="tf.jpg" alt="Photo 1 (remplace photo1.jpg)">
+			<p class="post-text"> alor je fé 1 article spécial pask cé un gran jour pr la guild. Ntre tank cassiopé a enfin u la thunderfuryé (lé foto son en dessou) apré plin de temp a farmé pr lé ligot e lé drop ki tomb pa. vrément cé 1 moment d’émotion fort pr mwa é pr lé offiçier car cassiopé a toujour éter la pr tanké méme kan on étais nul a mc.
+merci a tou lé raid ki on été la, mé surtou gg cassiopé cé tro la clas, mintenan on va pouvwar di a tou lé autres guilde ki on lé boss cé pas la mème catégoorie. cé pas 1 arme c’est 1 legend et toi tu la, t reste un modèle de courage méme si t kri souvent sur ts. </p>
+           <h2 class="rainbow-blink">GG MON GRO BRO CASSIO TROP BEL AVENTUR</h2>  
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+		
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">ON a tuer nefarian GG LES GROS</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">8</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="bwl.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text"> hier soir on a fé l’impossible : notr guilde a tuer nefariane a bwl. sa été dur pask ya eu bocoup de wipe o debut, mé a la fin la cohesion é l’esprit d’équipe on gagner, é sa cé la preuve ke kan on écoute le gm (moi) on arrive a tou.
+
+nefariane cé pa n’importe ki, cé le fils d’onyxia, cé le boss ultime é cé ns ki la tomber !!! un gro remerciement a tout les heal (mé surtou pa ce ki étai afk), les dps ki on mi le paquet, é lé tank ki on tenus. la guilde a prouver kil é fort, mé kil é un famill.
+
+je sui tré fier de vs é c pa fini, lé autre guilde peuvent se cacher pask on va bouffer tout lé boss ki rest. </p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+	  
+		<article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">Ma gilde ma vie</h2>
+            <div class="post-meta">Posté le 15/10/2007 à 06:12 — <span class="comment-count" data-for="p1">8</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="mc.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text"> Salut les potos !! c bon on a tué ragna alors quon nété pas full en plus <span class="blink">;LOOOOOOL</span> et iztiza été pas lvl 60 !<span class="blink">;LOOOOOOL</span> franchment on et bon. gg a ts,<span class="blink">;LOOOOOOL</span> en + on avait pa tro de rf,<span class="blink">;LOOOOOOL</span> bref gg les gro. <span class="blink">;LOOOOOOL</span>On a plein de nouvo lvl 60 dc on va pe faire un autre roaster pr <span class="blink">;que les potos puisse jouer allez a plus ++</span></p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+		  
+        <article class="post" data-post-id="p1">
+          <div class="post-header">
+            <h2 class="post-title">Sortie à la mère </h2>
+            <div class="post-meta">Posté le 14/10/2007 à 23:12 — <span class="comment-count" data-for="p1">0</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo1.jpg par ta photo -->
+            <img class="post-img" src="rip.jpg" alt="Photo 1 (remplace photo1.jpg)">
+            <p class="post-text"> <span class="blink">;LOOOOOOL</span>jé bronzée mes le <span class="blink">;LOOOOOOL</span> taureau a gagné ! 69 poing de saturafion magguel trop lolol <span class="blink">;LOOOOOOL</span></p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p1">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p1">00</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+
+        <article class="post" data-post-id="p2">
+          <div class="post-header">
+            <h2 class="post-title">Weakend avec la team lol</h2>
+            <div class="post-meta">Posté le 02/09/2007 à 18:42 — <span class="comment-count" data-for="p2">0</span> commentaire(s)</div>
+          </div>
+          <div class="post-body">
+            <!-- TODO: remplace photo2.jpg par ta photo -->
+            <img class="post-img" src="pote.jpg" alt="Photo 2 (remplace photo2.jpg)">
+            <p class="post-text">Tro de top momant avec vous l'équipe ! jvous kiff ! Laissez un comm, je rends ! <span class="blink">;LOOOOOOL</span></p>
+          </div>
+          <div class="post-actions">
+            <button class="kiff-btn" data-for="p2">Kiffer</button>
+            <span>Kiffs: <span class="counter kiff-count" data-for="p2">05</span></span>
+            <a href="#guestbook">Laisser un com's</a>
+          </div>
+        </article>
+      </section>
+
+      <!-- Colonne droite: Musique / Amis -->
+      <aside>
+        <section class="card">
+			<div class="title">Ma musique</div>
+			<div class="player">
+			<p style="font-size:12px; color:#ddd;">Playlist du moment :</p>
+			<div class="track">JUL — Tchikita</div>
+			<audio controls style="width:100%; margin:6px 0;">
+			<source src="chikita.mp3" type="audio/mpeg" />
+			Ton navigateur ne supporte pas l'audio HTML5.
+			</audio>
+
+
+			<div class="track">2 be 3 — Partir un jour</div>
+			<audio controls style="width:100%; margin:6px 0;">
+			<source src="2.mp3" type="audio/mpeg" />
+			Ton navigateur ne supporte pas l'audio HTML5.
+			</audio>
+
+
+			<div class="track">Tragédie — Hey ho - Tellement Ken la dessus !</div>
+			<audio controls style="width:100%; margin:6px 0;">
+			<source src="3.mp3" type="audio/mpeg" />
+			Ton navigateur ne supporte pas l'audio HTML5.
+			</audio>
+			</div>
+		</section>
+
+        <section id="classement" class="card" style="margin-top:12px;">
+  <div class="title">⚔️ Classement kikoo lol</div>
+
+  <!-- DPS -->
+  <div style="margin:10px 0; border:4px double #000; background:linear-gradient(90deg,#ff0,#f0f,#0ff); padding:6px; text-align:center; font-family:'Comic Sans MS';">
+    <h3 style="margin:0; font-size:20px; color:#000; text-shadow:1px 1px #fff;">🔥 Top DPS 🔥</h3>
+    <table style="width:100%; border-collapse:collapse; margin-top:6px; font-size:16px;">
+      <tr style="background:#ffd9fb;">
+        <td style="border:2px solid #000;">1</td>
+        <td style="border:2px solid #000;">💀 MOI</td>
+        <td style="border:2px solid #000;">99999 DPS</td>
+      </tr>
+      <tr style="background:#d9fffb;">
+        <td style="border:2px solid #000;">2</td>
+        <td style="border:2px solid #000;">🔥 Mon BRO CASSIO</td>
+        <td style="border:2px solid #000;">88888 DPS</td>
+      </tr>
+      <tr style="background:#ffd9fb;">
+        <td style="border:2px solid #000;">3</td>
+        <td style="border:2px solid #000;">⚡ MOI SUR MON MAG</td>
+        <td style="border:2px solid #000;">77777 DPS</td>
+      </tr>
+	  <tr style="background:#ffd9fb;">
+        <td style="border:2px solid #000;">4</td>
+        <td style="border:2px solid #000;">⚡ LES CLODO DE LA GILDE</td>
+        <td style="border:2px solid #000;">2 DPS</td>
+      </tr>
+	  <tr style="background:#ffd9fb;">
+        <td style="border:2px solid #000;">5</td>
+        <td style="border:2px solid #000;">⚡ LES CLODO DES OTRE GILDE</td>
+        <td style="border:2px solid #000;">1 DPS</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- HEAL -->
+  <div style="margin:10px 0; border:4px dotted #f0f; background:#000; padding:6px; text-align:center; font-family:'Comic Sans MS'; color:#0f0;">
+    <h3 style="margin:0; font-size:20px; color:#ff0; text-shadow:1px 1px #f0f;">💖 Top Healeur 💖</h3>
+    <table style="width:100%; border-collapse:collapse; margin-top:6px; font-size:16px;">
+      <tr style="background:#fffbcc;">
+        <td style="border:2px solid #fff;">1</td>
+        <td style="border:2px solid #fff;">✨ MOI SUR MON PALA</td>
+        <td style="border:2px solid #fff;">1337 HPS</td>
+      </tr>
+      <tr style="background:#ffe6ff;">
+        <td style="border:2px solid #fff;">2</td>
+        <td style="border:2px solid #fff;">💊 MOI SUR MON CHAMAN MAIS QUE A BC PARSE KE AVANT C PA DISPO HAHAHA</td>
+        <td style="border:2px solid #fff;">1234 HPS</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TANK -->
+  <div style="margin:10px 0; border:6px groove #00f; background:linear-gradient(45deg,#0ff,#00f,#0ff); padding:6px; text-align:center; font-family:'Comic Sans MS'; color:#fff;">
+    <h3 style="margin:0; font-size:20px; color:#ff0; text-shadow:2px 2px #000;">🛡️ Top Tank 🛡️</h3>
+    <table style="width:100%; border-collapse:collapse; margin-top:6px; font-size:16px; color:#fff;">
+      <tr style="background:#111;">
+        <td style="border:2px solid #fff;">1</td>
+        <td style="border:2px solid #fff;">🛡️ OBLIGe DE METTRE LE BRO CASSIO</td>
+        <td style="border:2px solid #fff;">9999 TPS (OUAI TPS MEC !)</td>
+      </tr>
+      <tr style="background:#333;">
+        <td style="border:2px solid #fff;">2</td>
+        <td style="border:2px solid #fff;">🥶 MOI PARSE QUE JVAIS TANK A NAXX AUSSI</td>
+        <td style="border:2px solid #fff;">8888 TPS</td>
+      </tr>
+      <tr style="background:#555;">
+        <td style="border:2px solid #fff;">3</td>
+        <td style="border:2px solid #fff;">🪓 PERSONNE DOTRE PEU ME TEST ! Mes un comm, je rend</td>
+        <td style="border:2px solid #fff;">7777 TPS</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+
+        <section class="card" style="margin-top:12px; position: sticky; top: 20px; z-index: 999;">
+  <span class="sticker">100% VIP</span>
+  <img id="idiot" src="enlarge.jpg"/>
+</section>
+
+      </aside>
+
+    </main>
+
+    <!-- Livre d'or (guestbook) -->
+    <section id="guestbook" class="card guestbook" style="margin-top:16px;">
+      <div class="title">Livre d'or — Laisse un com's \u2728</div>
+      <form id="gbForm" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <input required name="name" placeholder="Ton pseudo" />
+        <input required name="title" placeholder="Titre du com's" />
+        <textarea required name="message" placeholder="Ton message" style="grid-column: 1/-1; min-height: 80px;"></textarea>
+        <button class="btn" type="submit">Envoyer</button>
+      </form>
+      <div id="gbList" style="margin-top:10px;">
+        <div class="gb-entry">
+          <div class="gb-name">Matou</div>
+          <div class="gb-title">T'es vraiment trop canon, je comprends juste pas pourquoi tu veux toujours avoir des photos de mes pieds.</div>
+          <div class="gb-msg">xoxo &lt;3</div>
+        </div>
+        <div class="gb-entry">
+          <div class="gb-name">Qist</div>
+          <div class="gb-title">Cool projet !</div>
+          <div class="gb-msg">Chalut, quelles sont les règles d'obtention de la tf plise</div>
+        </div>
+		<div class="gb-entry">
+          <div class="gb-name">Zaper</div>
+          <div class="gb-title">JAI ToujOurs pas FIni mon Atiech revenez Sivousplait</div>
+          <div class="gb-msg">Allez quoi, svp</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+     2007 - Propulsé par Skyrock* (faux). Ceci est une réplique pour la blague. <span class="blink">;LOOOOOOL</span>
+    </footer>
+  </div>
+  <div id="horrorOverlay" class="horror-overlay"></div>
+<div id="horrorModal" style="display:none;" class="horror-modal" role="dialog" aria-modal="true" aria-labelledby="hTitle">
+<button class="horror-close" id="hClose">X</button>
+<h3 id="hTitle" class="horror-title">⚠️ ALLE VOIR LE STRIM DE LENFER DU BRO CASSIO</h3>
+<div class="horror-body" id="hBody">
+<p><span class="shake">LOOL</span> alor je fai un article spécial pask cé tré important pr l’avenir de la guild et du mond du jeux vidéo. Notre tank Héroïque Cassiopéé (wi celui ki a la thunderfury la légende ki bril + for ke lé soleill) et bah en + il é STREAMER sur Twich tv !!</p>
+<p><span class="shake">TROP FOR</span>Franchement les gars cé pas 1 streameur kom lé autres ki son tous des rigolo ki ragent, lui c 1 artiste du gameplay. Kan tu le regard tu pleure, kan il clik sur sa barre 1 tu sen la puissance direct, kan il fait un taunt c com si dieu lui meme posai sa main sur le boss.</p>
+<p><span class="shake">TWITCH.TV/KRYO_TV</span> Si vou aller pas follow cé ke vou ete jaloux ou ke vou aime pa la qualitay. Son stream c la télé du future, cé mieux ke Netflix, mieux ke le cinéma, méme mieux ke regarder un match de foot de Zidane. Cé un mélange de skill, de beauté et de respect, en plus il parle dans le micro avec une voix d’homme ki inspire confiance (mé un peu fatigue kan méme pask il raid tro fort).</p>
+<p><span class="shake">💬</span>  Témoignage d’un raid : "kan Cassiopéé lance son live, mon pc chauffe tellement fort ke g crus ke ct la thunderfury ki sortai de lécran"p>
+<p><span class="shake">SALUT LES RAGEU</span> Donc a partir d’aujourd’hui c officiel : Cassiopéé c le streameur de la guild, il représente nos couleur, nos wipe et nos loot. Si t abonne pa → tu sera ban du raid, cé la régle.</p>
+
+</div>
+</div>
+
+
+
+<script>
+(function(){
+  let started = false;
+  function kick(){
+    if (started) return;
+    started = true;
+    const a = new Audio('2.mp3'); // mets ton fichier local
+    a.loop = true;
+    // Option: a.volume = 0.7;
+    a.play().catch(()=>{/* au cas où */});
+
+    ['click','pointerdown','touchstart','keydown','mousedown'].forEach(ev =>
+      document.removeEventListener(ev, kick, true)
+    );
+  }
+  ['click','pointerdown','touchstart','keydown','mousedown'].forEach(ev =>
+    document.addEventListener(ev, kick, { capture:true, passive:true })
+  );
+})();
+</script>
+
+<!-- Popin cachée au départ -->
+<div id="trollModal" style="
+  display:none;
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 450px; background: #fff; border: 5px solid #000; box-shadow: 0 10px 30px rgba(0,0,0,.7);
+  padding: 20px; z-index: 9999; text-align:center;
+">
+  <button id="closeBtn" style="
+    position: absolute; top: 8px; right: 8px; background:#ff00aa; color:#000; border:2px solid #000;
+    font-weight: bold; cursor: pointer;
+  ">X</button>
+  <h3>PA BESOIN DE SA BRO, JTE LAISSE SUIVE MON TUTAU DE ROTATION DIMAG</h3>
+  <img src="wtf.gif">
+  <p>JE TES BIEN U GROS</p>
+</div>
+
+<script>
+(function(){
+  const modal = document.getElementById('trollModal');
+  const closeBtn = document.getElementById('closeBtn');
+  const trigger = document.getElementById('idiot');
+  let moveDistance = 250;
+
+  // Affiche la popin au clic sur #idiot
+  trigger.addEventListener('click', () => {
+    modal.style.display = 'block';
+    modal.style.left = '50%';
+    modal.style.top = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+  });
+
+  // Fait bouger la popin si on approche du X
+  document.addEventListener('mousemove', (e) => {
+    if (modal.style.display === 'none') return; // si popin fermée
+    const rect = closeBtn.getBoundingClientRect();
+    const dx = e.clientX - (rect.left + rect.width/2);
+    const dy = e.clientY - (rect.top + rect.height/2);
+    const dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < moveDistance){
+      const newX = Math.random() * (window.innerWidth - modal.offsetWidth);
+      const newY = Math.random() * (window.innerHeight - modal.offsetHeight);
+      modal.style.left = newX + 'px';
+      modal.style.top = newY + 'px';
+      modal.style.transform = 'translate(0,0)';
+    }
+  });
+
+  // Option : après 3 clics, autoriser à fermer
+  let tries = 0;
+  closeBtn.addEventListener('click', () => {
+    tries++;
+    if(tries > 3){
+      modal.style.display = 'none';
+    } else {
+      alert('Raté ! Essaie encore 😜');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+const overlay = document.getElementById('horrorOverlay');
+const modal = document.getElementById('horrorModal');
+const openBtn = document.getElementById('cassio');
+const closeBtn= document.getElementById('hClose');
+let sparkInt = null;
+
+
+function open(){
+overlay.style.display='block';
+modal.style.display='block';
+spawnLoop();
+}
+function close(){
+overlay.style.display='none';
+modal.style.display='none';
+stopLoop();
+}
+function spawnLoop(){
+stopLoop();
+sparkInt = setInterval(()=>{
+const e = document.createElement('div');
+e.className='horror-spark';
+e.textContent = ['✨','💥','🔥','💔','🌈'][Math.floor(Math.random()*5)];
+const r = modal.getBoundingClientRect();
+const x = r.left + Math.random()*r.width;
+const y = r.top + r.height + 10; // départ bas
+e.style.left = x+'px';
+e.style.top = y+'px';
+document.body.appendChild(e);
+setTimeout(()=> e.remove(), 2400);
+}, 160);
+}
+function stopLoop(){ if(sparkInt){ clearInterval(sparkInt); sparkInt=null; } }
+
+
+// Ouvrir via bouton de démo
+if(openBtn){ openBtn.addEventListener('click', open); }
+// Fermer
+closeBtn.addEventListener('click', close);
+overlay.addEventListener('click', close);
+
+
+// Option : auto-ouvrir au chargement (décommente la ligne suivante)
+// open();
+})();
+</script>
+<!-- ======= /POPIN HORRIBLE ======= -->
+
+  <script>
+    // --------------------------------------------------
+    // JS offline — compteurs & livre d'or
+    // --------------------------------------------------
+    (function() {
+      const $ = (sel, root=document) => root.querySelector(sel);
+      const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+      // --- Compteur de visites (localStorage) ---
+      const VISIT_KEY = 'skyblog_counter';
+      let count = parseInt(localStorage.getItem(VISIT_KEY) || '0', 10);
+      if (!count) {
+        // TODO: change le nombre de départ si tu veux un blog "ancien"
+        count = 12345; 
+      }
+      count++;
+      localStorage.setItem(VISIT_KEY, String(count));
+      const pad = n => n.toString().padStart(6, '0');
+      $('#visitCounter').textContent = pad(count);
+
+      // --- Kiffs par post ---
+      $$('.post').forEach(post => {
+        const id = post.getAttribute('data-post-id');
+        const KIFF_KEY = 'kiff_' + id;
+        const countEl = post.querySelector('.kiff-count');
+        const stored = parseInt(localStorage.getItem(KIFF_KEY) || '0', 10);
+        if (!countEl.getAttribute('data-init')) countEl.textContent = (stored || parseInt(countEl.textContent||'0',10)).toString().padStart(2,'0');
+        const btn = post.querySelector('.kiff-btn');
+        btn.addEventListener('click', () => {
+          let c = parseInt(localStorage.getItem(KIFF_KEY) || countEl.textContent || '0', 10);
+          c++;
+          localStorage.setItem(KIFF_KEY, String(c));
+          countEl.textContent = c.toString().padStart(2,'0');
+          btn.textContent = 'Merci \u2665\uFE0F';
+          setTimeout(()=> btn.textContent = 'Kiffer', 1200);
+        });
+      });
+
+      // --- Compteur d'articles ---
+      $('#postCounter').textContent = $$('.post').length.toString().padStart(2,'0');
+
+      // --- Livre d'or (persistant localStorage) ---
+      const GB_KEY = 'guestbook_entries_v1';
+      const gbList = $('#gbList');
+      try {
+        const saved = JSON.parse(localStorage.getItem(GB_KEY) || '[]');
+        if (Array.isArray(saved)) saved.forEach(addGbEntry); 
+      } catch (e) {}
+
+      $('#gbForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const entry = { name: fd.get('name'), title: fd.get('title'), msg: fd.get('message'), t: Date.now() };
+        addGbEntry(entry, true);
+        e.target.reset();
+      });
+
+      function addGbEntry(entry, save=false) {
+        const wrap = document.createElement('div');
+        wrap.className = 'gb-entry';
+        wrap.innerHTML = `<div class="gb-name"></div><div class="gb-title"></div><div class="gb-msg"></div>`;
+        wrap.querySelector('.gb-name').textContent = entry.name;
+        wrap.querySelector('.gb-title').textContent = entry.title;
+        wrap.querySelector('.gb-msg').textContent = entry.msg;
+        gbList.prepend(wrap);
+        if (save) {
+          const cur = JSON.parse(localStorage.getItem(GB_KEY) || '[]');
+          cur.push(entry);
+          localStorage.setItem(GB_KEY, JSON.stringify(cur));
+        }
+        updateGlobalComments();
+      }
+
+      // --- Compteurs de com's par post et global ---
+      function updateGlobalComments(){
+        const total = $$('#gbList .gb-entry').length;
+        $('#globalComs').textContent = total.toString().padStart(2,'0');
+        // On répartit grossièrement sur les deux posts (juste pour le look)
+        const perPost = Math.max(0, Math.floor(total/2));
+        $$('.comment-count').forEach((el,i) => el.textContent = (i === 0 ? perPost : total - perPost));
+      }
+      updateGlobalComments();
+
+    })();
+  </script>
+  
+  <script>
+(function(){
+  const btn = document.getElementById('copain');
+  if(btn){
+    btn.addEventListener('click', () => {
+      let messages = [
+        "JAI PA DE COPIN, JE KE DES COPINE 8==>",
+        "TES UNE COPINE TOI ? 💔",
+        "TA UN CARAMAILE POUR KON PARLE 🤩",
+        "FILE MOI TON ASV MINI ST"
+      ];
+      let i = 0;
+      function next(){
+        if(i < messages.length){
+          alert(messages[i]);
+          i++;
+          next();
+        }
+      }
+      next();
+    });
+  }
+})();
+</script>
+<script>
+/*   ANCIEN CURSEUR ETOILE MOCHE
+document.addEventListener('mousemove', e => {
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.style.left = e.pageX + 'px';
+  s.style.top = e.pageY + 'px';
+  s.textContent = '✨';
+  document.body.appendChild(s);
+  setTimeout(()=> s.remove(), 1000);
+});*/
+</script>
+<script>
+(function(){
+  // ---- CIBLAGE DES CHAMPS EXISTANTS ----
+  const form = document.getElementById('gbForm');
+  if(!form) return;
+
+  const nameInput  = form.querySelector('input[name="name"]');
+  const titleInput = form.querySelector('input[name="title"]');
+  const msgTA      = form.querySelector('textarea[name="message"]');
+  const gbList     = document.getElementById('gbList');
+
+  // ---- COLLECTE DES VALEURS EXISTANTES ----
+  const names = new Set();
+  const titles = new Set();
+  const messages = new Set();
+
+  if (gbList) {
+    gbList.querySelectorAll('.gb-entry').forEach(e=>{
+      const n = e.querySelector('.gb-name')?.textContent?.trim();   if(n) names.add(n);
+      const t = e.querySelector('.gb-title')?.textContent?.trim();  if(t) titles.add(t);
+      const m = e.querySelector('.gb-msg')?.textContent?.trim();    if(m) messages.add(m);
+    });
+  }
+
+  // Presets “skyblog vibes”
+  ['Anonyme','bg_du_62','Jess','Nico','Cam','Matou','Qist','Zaper'].forEach(n=>names.add(n));
+  ["Trop beau ton sky !","Lâche tes com's","Team mèches validées","J'adore tes gifs"].forEach(t=>titles.add(t));
+  [
+    "Grave stylé, je repasserai.",
+    "Passe voir mon sky stp xoxo",
+    "T’es trop une star 😎",
+    "Cœur sur toi <3",
+    "On s’voit à l’Alterac ?"
+  ].forEach(m=>messages.add(m));
+
+  // ---- DATALIST POUR PSEUDO & TITRE (SANS CHANGER TON HTML) ----
+  function attachDatalist(inputEl, id, values){
+    if(!inputEl) return;
+    // crée <datalist> + l’attache
+    let dl = document.getElementById(id);
+    if(!dl){
+      dl = document.createElement('datalist');
+      dl.id = id;
+      document.body.appendChild(dl);
+    } else {
+      dl.innerHTML = '';
+    }
+    [...values].forEach(v=>{
+      const o = document.createElement('option');
+      o.value = v;
+      dl.appendChild(o);
+    });
+    inputEl.setAttribute('list', id);
+    inputEl.setAttribute('autocomplete', 'on');
+  }
+
+  attachDatalist(nameInput,  'namesDatalist',  names);
+  attachDatalist(titleInput, 'titlesDatalist', titles);
+
+  // ---- SUGGESTIONS POUR LE TEXTAREA (MESSAGE) ----
+  if (msgTA) {
+    // wrapper pour positionner la liste sous le textarea, sans toucher ton HTML :
+    const wrap = document.createElement('div');
+    wrap.className = 'gb-suggest-wrap';
+    msgTA.parentNode.insertBefore(wrap, msgTA.nextSibling);
+
+    let box = null;
+    const list = [...messages];
+
+    function show(items){
+      hide();
+      if(!items.length) return;
+      box = document.createElement('div');
+      box.className = 'gb-suggest-list';
+      items.slice(0,7).forEach(txt=>{
+        const it = document.createElement('div');
+        it.className = 'gb-suggest-item';
+        it.textContent = txt;
+        it.addEventListener('click', ()=>{
+          msgTA.value = txt;
+          hide();
+          msgTA.focus();
+        });
+        box.appendChild(it);
+      });
+      wrap.appendChild(box);
+    }
+    function hide(){ if(box){ box.remove(); box = null; } }
+    function filter(q){
+      q = q.toLowerCase();
+      const res = list.filter(x=>x.toLowerCase().includes(q));
+      show(res);
+    }
+
+    msgTA.addEventListener('input', ()=>{
+      const q = msgTA.value.trim();
+      if(q.length < 1) hide(); else filter(q);
+    });
+    msgTA.addEventListener('blur', ()=> setTimeout(hide, 150));
+    msgTA.addEventListener('focus', ()=> {
+      const q = msgTA.value.trim();
+      if(q.length) filter(q);
+    });
+  }
+
+  // ---- OPTION : mémoriser ce que les gens soumettent pour enrichir l’autocomplét. ----
+  form.addEventListener('submit', ()=>{
+    const n = nameInput?.value?.trim();  if(n) names.add(n);
+    const t = titleInput?.value?.trim(); if(t) titles.add(t);
+    const m = msgTA?.value?.trim();      if(m) messages.add(m);
+    // Re-génère les datalists pour les prochaines saisies
+    attachDatalist(nameInput,  'namesDatalist',  names);
+    attachDatalist(titleInput, 'titlesDatalist', titles);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('fireworksCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const particles = [];
+
+  function spawnFirework(x, y){
+    const hue = Math.floor(Math.random()*360);
+    const count = 90;                 // ↑ plus de particules (avant: 120)
+    for(let i=0;i<count;i++){
+      const angle = (i/count) * Math.PI * 2;
+      const speed = (Math.random()*4 + 3); // ↑ vitesse (rayon plus grand)
+      particles.push({
+        x, y,
+        vx: Math.cos(angle)*speed,
+        vy: Math.sin(angle)*speed,
+        life: 60 + Math.random()*40,   // ↑ vie plus longue (avant ~60–90)
+        alpha: 1,
+        hue,
+        size: 2 + Math.random()*12,    // ↑ particules plus grosses (avant: 2–22)
+        drag: 0.986,
+        grav: 0.035 + Math.random()*0.02
+      });
+    }
+  }
+
+  function loop(){
+    // Traînée
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Rendu additif + glow
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.shadowColor = 'rgba(255,255,255,0.6)';
+    ctx.shadowBlur = 12;               // ↑ halo lumineux
+
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.vx *= p.drag;
+      p.vy = p.vy * p.drag + p.grav;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= 0.008;                // ↓ s'estompe plus lentement (avant: 0.012)
+      p.life -= 1;
+
+      if(p.alpha <= 0 || p.life <= 0){
+        particles.splice(i,1);
+        continue;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${p.alpha})`;
+      ctx.fill();
+    }
+
+    // reset glow pour ne pas polluer d'autres dessins éventuels
+    ctx.shadowBlur = 0;
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+function schedule(){
+    const delay = 2000 + Math.random()*4000; // 2–6 secondes
+    setTimeout(()=>{
+      spawnFirework(150, 150); // <-- haut gauche (offset 150px/150px)
+      schedule();
+    }, delay);
+  }
+  schedule();
+
+  window.triggerFirework = () => spawnFirework(150, 150);
+})();
+</script>
+<script>
+(function(){
+  const sprite = document.getElementById('cursorSprite');
+  document.body.classList.add('use-custom-cursor');
+
+  let mouseX = -1000, mouseY = -1000;
+  let lastX = mouseX, lastY = mouseY;
+  let angleDeg = 0;
+  let rafId = null;
+
+  // pour adoucir le suivi (inertie légère)
+  const lerp = (a,b,t)=> a + (b-a)*t;
+
+  function onMove(e){
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if(rafId === null) rafId = requestAnimationFrame(update);
+  }
+
+  function update(){
+    rafId = null;
+
+    // calcule l’angle selon le déplacement
+    const dx = mouseX - lastX;
+    const dy = mouseY - lastY;
+
+    // si la souris a vraiment bougé, mets à jour l’angle
+    if (Math.abs(dx) + Math.abs(dy) > 0.5) {
+      // atan2: angle en radians; 0° vers la droite, on convertit en degrés
+      angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      lastX = mouseX;
+      lastY = mouseY;
+    }
+
+    // offset pour centrer l’image sur la pointe (ajuste si besoin)
+    const offsetX = -24;  // moitié de width (48/2)
+    const offsetY = -24;  // moitié de height
+
+    // légère interpolation pour un mouvement smooth
+    const cur = sprite._pos || {x: mouseX + offsetX, y: mouseY + offsetY};
+    const nx = lerp(cur.x, mouseX + offsetX, 0.35);
+    const ny = lerp(cur.y, mouseY + offsetY, 0.35);
+    sprite._pos = {x:nx, y:ny};
+
+    sprite.style.transform = `translate(${nx}px, ${ny}px) rotate(${angleDeg}deg)`;
+  }
+
+  // active sur desktop uniquement (évite d’embêter le tactile)
+  const isTouch = matchMedia('(pointer: coarse)').matches;
+  if (!isTouch) {
+    document.addEventListener('mousemove', onMove, {passive:true});
+  }
+
+  // option: désactiver le curseur custom si besoin
+  window.disableCustomCursor = function(){
+    document.body.classList.remove('use-custom-cursor');
+    sprite.style.display = 'none';
+  };
+  window.enableCustomCursor = function(){
+    document.body.classList.add('use-custom-cursor');
+    sprite.style.display = '';
+  };
+})();
+</script>
+
+<script>
+(function(){
+  const sprite = document.getElementById('cursorSprite');
+  document.body.classList.add('use-custom-cursor');
+
+  let mouseX = -1000, mouseY = -1000;
+  let lastX  = mouseX, lastY  = mouseY;
+  let angleDeg = 0;
+  let spinAdd = 0;          // rotation “bonus” pour le POP
+  let rafId = null;
+
+  const lerp = (a,b,t)=> a + (b-a)*t;
+
+  function onMove(e){
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if(rafId === null) rafId = requestAnimationFrame(update);
+  }
+
+  function update(){
+    rafId = null;
+
+    // calcule l’angle selon le déplacement
+    const dx = mouseX - lastX;
+    const dy = mouseY - lastY;
+    if (Math.abs(dx) + Math.abs(dy) > 0.3) {
+      angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      lastX = mouseX;
+      lastY = mouseY;
+    }
+
+    // centre l’image sur la souris
+    const offsetX = - (sprite.offsetWidth  || 100) / 2;
+    const offsetY = - (sprite.offsetHeight || 100) / 2;
+
+    const cur = sprite._pos || {x: mouseX + offsetX, y: mouseY + offsetY};
+    const nx = lerp(cur.x, mouseX + offsetX, 0.35);
+    const ny = lerp(cur.y, mouseY + offsetY, 0.35);
+    sprite._pos = {x:nx, y:ny};
+
+    sprite.style.transform = `translate(${nx}px, ${ny}px) rotate(${angleDeg + spinAdd}deg)`;
+  }
+
+  const isTouch = matchMedia('(pointer: coarse)').matches;
+  if (!isTouch) document.addEventListener('mousemove', onMove, {passive:true});
+
+  // ----- Effet “POP + rotation” au survol de #idiot -----
+  const idiot = document.getElementById('idiot');
+  if (idiot) {
+    idiot.addEventListener('mouseenter', () => {
+      // taille vers 300x300
+      sprite.classList.add('big');
+      // petit overshoot très bref
+      sprite.classList.add('overshoot');
+      setTimeout(()=> sprite.classList.remove('overshoot'), 120);
+
+      // pulse de rotation: +360° en ~280ms
+      spinPulse(360, 280);
+    });
+    idiot.addEventListener('mouseleave', () => {
+      sprite.classList.remove('big');
+      // remet le spin bonus à 0 en douceur
+      spinPulse(0, 200);
+    });
+  }
+
+  // anime spinAdd vers une valeur cible (deg) sur une durée (ms)
+  function spinPulse(targetDeg, duration){
+    const start = performance.now();
+    const from  = spinAdd;
+    const delta = targetDeg - from;
+    function tick(t){
+      const k = Math.min(1, (t - start) / duration);
+      // easing out pour un effet naturel
+      const ease = 1 - Math.pow(1 - k, 3);
+      spinAdd = from + delta * ease;
+      if (k < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        // si cible = 360, on retombe proprement à 0 pour ne pas accumuler
+        if (targetDeg >= 359) spinAdd = 0;
+      }
+      if (rafId === null) rafId = requestAnimationFrame(update);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // utilitaires pour activer/désactiver le curseur custom si besoin
+  window.disableCustomCursor = function(){
+    document.body.classList.remove('use-custom-cursor');
+    sprite.style.display = 'none';
+  };
+  window.enableCustomCursor = function(){
+    document.body.classList.add('use-custom-cursor');
+    sprite.style.display = '';
+  };
+})();
+</script>
+
+
+</body>
+</html>
