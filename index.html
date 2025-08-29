@@ -1311,28 +1311,6 @@ je sui tré fier de vs é c pa fini, lé autre guilde peuvent se cacher pask on 
 
 
 
-
-<script>
-(function(){
-  let started = false;
-  function kick(){
-    if (started) return;
-    started = true;
-    const a = new Audio('2.mp3'); // mets ton fichier local
-    a.loop = true;
-    // Option: a.volume = 0.7;
-    a.play().catch(()=>{/* au cas où */});
-
-    ['click','pointerdown','touchstart','keydown','mousedown'].forEach(ev =>
-      document.removeEventListener(ev, kick, true)
-    );
-  }
-  ['click','pointerdown','touchstart','keydown','mousedown'].forEach(ev =>
-    document.addEventListener(ev, kick, { capture:true, passive:true })
-  );
-})();
-</script>
-
 <script>
   (function(){
     const overlay = document.getElementById('uglyOverlay');
@@ -1527,23 +1505,7 @@ overlay.addEventListener('click', close);
       const pad = n => n.toString().padStart(6, '0');
       $('#visitCounter').textContent = pad(count);
 
-      // --- Kiffs par post ---
-      $$('.post').forEach(post => {
-        const id = post.getAttribute('data-post-id');
-        const KIFF_KEY = 'kiff_' + id;
-        const countEl = post.querySelector('.kiff-count');
-        const stored = parseInt(localStorage.getItem(KIFF_KEY) || '0', 10);
-        if (!countEl.getAttribute('data-init')) countEl.textContent = (stored || parseInt(countEl.textContent||'0',10)).toString().padStart(2,'0');
-        const btn = post.querySelector('.kiff-btn');
-        btn.addEventListener('click', () => {
-          let c = parseInt(localStorage.getItem(KIFF_KEY) || countEl.textContent || '0', 10);
-          c++;
-          localStorage.setItem(KIFF_KEY, String(c));
-          countEl.textContent = c.toString().padStart(2,'0');
-          btn.textContent = 'Merci \u2665\uFE0F';
-          setTimeout(()=> btn.textContent = 'Kiffer', 1200);
-        });
-      });
+    
 
       // --- Compteur d'articles ---
       $('#postCounter').textContent = $$('.post').length.toString().padStart(2,'0');
@@ -2211,6 +2173,113 @@ function schedule(){
 </script>
 <!-- ===== /POPIN IMPÉRIALE ===== -->
 
+<style>
+  /* Bouton flottant ON/OFF musique */
+  .audio-fab{
+    position:fixed; right:16px; bottom:16px;
+    z-index:100000;
+    border:3px solid #000; background:#ff0; color:#000;
+    font:700 13px/1 "Comic Sans MS", Arial, sans-serif;
+    padding:8px 10px; cursor:pointer; box-shadow:0 4px 0 #000;
+  }
+  .audio-fab[aria-pressed="true"]{ background:#0f0; }  /* playing */
+  .audio-fab:active{ transform:translateY(1px); box-shadow:0 3px 0 #000; }
+</style>
+
+<script>
+(function(){
+  // === CONFIG ===
+  const SRC = 'shadys-cindysander.wav';      // <-- mets ici ton fichier son
+  const LOOP = true;
+
+  // === état global (unique) ===
+  let audio = document.getElementById('bgAudio');
+  if (!audio) {
+    audio = document.createElement('audio');
+    audio.id = 'bgAudio';
+    audio.src = SRC;
+    audio.loop = LOOP;
+    audio.preload = 'auto';
+    audio.style.display = 'none';
+    document.body.appendChild(audio);
+  }
+  // Expose pour debug
+  window.__bgAudio = audio;
+
+  // === bouton flottant (créé si absent) ===
+  let btn = document.getElementById('audioFab');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'audioFab';
+    btn.className = 'audio-fab';
+    document.body.appendChild(btn);
+  }
+
+  function syncBtn(){
+    if (audio.paused) {
+      btn.setAttribute('aria-pressed','false');
+      btn.textContent = '🔇 Musique (OFF) — cliquer';
+    } else {
+      btn.setAttribute('aria-pressed','true');
+      btn.textContent = '🔊 Musique (ON) — cliquer';
+    }
+  }
+
+  // Essaye de jouer (avec gestion blocage navigateur)
+  async function tryPlay(tag){
+    try {
+      await audio.play();
+      // console.log('audio play ok:', tag);
+    } catch(e) {
+      // Certains navigateurs exigent un "prime" muet dans un geste utilisateur.
+      try {
+        audio.muted = true;
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+        audio.muted = false;
+        await audio.play(); // 2e essai audible
+      } catch(e2){
+        // console.warn('audio play blocked:', e2);
+      }
+    } finally {
+      syncBtn();
+    }
+  }
+
+  function stop(){
+    audio.pause();
+    syncBtn();
+  }
+
+  // Premier geste utilisateur -> lance la musique
+  let primed = false;
+  function firstGesture(){
+    if (primed) return;
+    primed = true;
+    tryPlay('first-gesture');
+    // on retire tous les écouteurs de "premier geste"
+    gestureEvents.forEach(ev => document.removeEventListener(ev, firstGesture, captureOpts));
+  }
+  const gestureEvents = ['pointerdown','touchstart','click','keydown','mousedown'];
+  const captureOpts   = { capture:true, passive:true };
+  gestureEvents.forEach(ev => document.addEventListener(ev, firstGesture, captureOpts));
+
+  // Toggle via bouton
+  btn.addEventListener('click', () => {
+    if (audio.paused) tryPlay('button');
+    else stop();
+  });
+
+  // Garde le bouton synchro si l’audio change d’état autrement
+  audio.addEventListener('play',  syncBtn);
+  audio.addEventListener('pause', syncBtn);
+  audio.addEventListener('ended', syncBtn);
+
+  // Init label au chargement
+  syncBtn();
+})();
+</script>
 
 
 
