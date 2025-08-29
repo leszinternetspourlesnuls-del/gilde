@@ -37,7 +37,16 @@
         radial-gradient(rgba(255,255,255,0.12), transparent 40%) 3px 3px/6px 6px,
         linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);*/
 		background-image:url('bg.png');
-    }
+  animation: bg-float 500s ease-in-out infinite;
+}
+
+@keyframes bg-float {
+  0%   { background-position: 0px 0px; }
+  25%  { background-position: 200px 50px; }
+  50%  { background-position: 400px -100px; }
+  75%  { background-position: 200px 100px; }
+  100% { background-position: 0px 0px; }
+}
 
     a { color: var(--link); text-decoration: underline; }
     img { max-width: 100%; display: block; }
@@ -231,7 +240,112 @@
 /* Bouton démo pour ouvrir */
 .btn-open-horror{position:fixed;bottom:18px;right:18px;background:#000;color:#0f0;border:3px double #fff;padding:8px 12px;z-index:9999}
   </style>
+<style>
+  @keyframes btnPulse { from{transform:scale(1)} to{transform:scale(1.06)} }
 
+  /* Overlay sombre */
+  .ugly-overlay{
+    position:fixed; inset:0;
+    background: radial-gradient(rgba(0,0,0,.75), rgba(0,0,0,.95));
+    backdrop-filter: blur(2px);
+    z-index: 9998;
+    display:none;
+  }
+
+  /* Boîte modale ultra flashy */
+  .ugly-popin{
+    position:fixed; left:50%; top:50%;
+    transform: translate(-50%,-50%) rotate(-1.5deg);
+    width:min(820px, 92vw);
+    max-height: 80vh; overflow:auto;
+    background: conic-gradient(from 0deg, #ff00aa, #ffe600, #00ffd5, #7f00ff, #ff00aa);
+    border: 10px ridge #000;
+    box-shadow: 0 0 0 6px #fff, 0 0 30px #ff00aa, 0 0 60px #00ffd5, inset 0 0 20px rgba(255,255,255,.6);
+    z-index: 9999;
+    display:none;
+    animation: wobble 1.2s ease-in-out infinite alternate, hueShift 5s linear infinite;
+    font-family: "Comic Sans MS","Trebuchet MS", Arial, sans-serif;
+    color: #000;
+  }
+  @keyframes wobble{ from{transform:translate(-50%,-50%) rotate(-2deg)} to{transform:translate(-50%,-50%) rotate(2deg)} }
+  @keyframes hueShift{ to{ filter:hue-rotate(360deg); } }
+
+  /* Bordure “néon” qui tourne autour */
+  .ugly-popin::before{
+    content:"";
+    position:absolute; inset:-14px;
+    border: 6px dashed #000;
+    animation: spin 6s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .ugly-header{
+    position:sticky; top:0;
+    background: linear-gradient(180deg,#fff,#ffd3f6);
+    border-bottom: 6px groove #000;
+    padding: 8px 12px;
+    z-index: 2;
+  }
+  .ugly-header marquee{
+    font-weight:900; text-transform:uppercase;
+    text-shadow: 1px 1px #fff, -1px -1px #fff;
+  }
+
+  .ugly-close{
+    position:absolute; right:10px; top:8px;
+    background:#ff00aa; color:#000;
+    border:4px solid #000; font-weight:900;
+    padding: 2px 10px; cursor:pointer;
+    box-shadow: 0 3px 0 #000;
+    animation: closeBounce 1.4s infinite;
+  }
+  @keyframes closeBounce{
+    0%,100%{ transform: translateY(0) rotate(0deg); }
+    50%    { transform: translateY(-2px) rotate(5deg); }
+  }
+  .ugly-close:active{ transform: translateY(1px) rotate(-3deg); }
+
+  .ugly-body{
+    margin: 10px;
+    padding: 16px;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.96) 0 12px, rgba(255,255,255,.75) 12px 24px);
+    border: 6px double #000;
+    box-shadow: inset 0 0 20px rgba(0,0,0,.2);
+    line-height: 1.35;
+  }
+  .ugly-body p{ margin: 0 0 10px; }
+  .ugly-body .spark{
+    display:inline-block; animation: sparkFloat 1.6s ease-in-out infinite;
+  }
+  @keyframes sparkFloat{ 0%,100%{ transform:translateY(0) scale(1);} 50%{ transform:translateY(-4px) scale(1.15);} }
+  .blink{ animation: blink 1s steps(1,end) infinite; }
+  @keyframes blink{ 50%{ opacity: 0; } }
+
+  .ugly-footer{
+    border-top: 6px groove #000;
+    padding: 6px 10px;
+    background: linear-gradient(180deg,#ffd3f6,#fff);
+  }
+  .ticker{
+    font-size:12px; font-weight:bold; color:#900;
+    text-shadow: 0 1px #fff;
+    animation: tickerFade 2s ease-in-out infinite alternate;
+  }
+  @keyframes tickerFade{ from{opacity:.7} to{opacity:1} }
+
+  /* Petites paillettes qui pop autour (bonus) */
+  .ug-spark{
+    position: fixed; pointer-events:none; z-index: 10000;
+    font-size: 18px; opacity: 0; transform: translateY(6px);
+    animation: ugSpark 1.8s ease forwards;
+  }
+  @keyframes ugSpark{
+    0%{ opacity: 0; transform: translateY(6px) scale(.7);}
+    20%{ opacity: 1; }
+    100%{ opacity: 0; transform: translateY(-40px) scale(1.2);}
+  }
+</style>
 <style>
   .gb-suggest-wrap{ position: relative; }
   .gb-suggest-list{
@@ -291,7 +405,7 @@
 </style>
 </head>
 <body class="glitter-layer" >
-<div id="pwOverlay" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+<div id="pwOverlay" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;display:none !important;">
 
   <!-- Titre + image au dessus -->
   <h1 style="color:#ff0;font-family:'Comic Sans MS';font-size:28px;text-shadow:2px 2px #f0f, -2px -2px #0ff; margin-bottom:10px; animation:blink 1s infinite;margin-top:-120px;">
@@ -383,8 +497,8 @@ function spawnFlyImage(){
           </p>
           <div class="nav-links">
             <div>Aqieuil</div>
-            <div>La gilde</div>
-            <div onclick="alert('Pour voir min gros membre, envoi un wizz. Cochonne va')">Nos membres</div>
+            <div id="openUgly">La gilde</div>
+            <div id="openImperial">LE GM, CE BG</div>
             <div id="cassio">LE STRIM DE CASSIO</div>
             <div id="copain">Nos copaings</div>
           </div>
@@ -582,12 +696,85 @@ function spawnFlyImage(){
 
   <hr style="border:1px dashed #000;">
 
-  <p>👑 <b>Le GM</b> (Guerrier DPS)<br>
-  <i>"Le dieu vivant auto-proclamé"</i><br>
-  ➡️ Sert à : tout faire (selon lui)<br>
-  ✨ Signe : invente des strats "fok taper +"<br>
-  📢 Citation : "cé moi ki fé tou, les offi son là pour fair joli"<br>
-  🌈 Slogan : "Le GM, + for ke ton papa"</p>
+  <p>👑 <b>OTHER LE BG (MOI HAHAH XLOL)</b> (Guerrier DPS)<br>
+alor pour ceu ki me coné pa encor, jvai raconté mon istwar, paske si je le fé pa, ba lé gen i pouron jamé comprendre pkoi Eternity cé la plu grande guilde du serveur. Moi cé LE GM. Pa un gm, pa un pseudo lead ki fé genre, non, LE GM ORIGINEL, le premier, le seul, le vrai.
+
+Kan jé commencé WoW, le monde i tourné pa pareil. Lé guilde i wipe, lé joueur i savé pa joué, lé boss i resté debout. Moi g popé avek mon guerrier, le dps ki fracasse tou, mé osi le cerveau ki invente tou. Dè ke g posé un pied a Stormwind, les femelles i se son retourné, pask i savé instanémant ke le mâle dominant été arrivé.
+
+Ma premiere epopei cé MC. Tou le monde y disé ke Ragnaros été impossible, ke cé trop dur, ke cé trop long. Moi g regardé le feu, g disé 'écouté mwa'. On a tapé, on a crit, et boum Raggy i tombé. Cé la ke g compris : mon destin cé pa d’être un joueur, mé d’être une LÉGENDE. Déja les femelles du serv i floodé mes /w en mode 'ouaaaah cé toi le GM trop for ?'. Oué c moi, déso pour lé autre.
+
+Apres cé venu BWL. Blackwing Lair, lé dragons, lé wipe, lé raid paumé. Cé la ke mon charisme il explozé. Je me suis mis devant, g crié 'ON DPS PLUS FORT' et paf, Nefarian i tombé. Tou lé guilde jalouse, tou lé joueur en pls. Moi en haut du classement. Et toujour pareil : dès ke je loot, le serv entier i tremble.
+
+Puis AQ40, le désert, C’Thun, l’horreur. Lé joueur i savé pa koi faire. Mé mwa g di : 'on fé un cercle, on tape, on bouge'. Résulta ? Le boss i tombé. Eternity au sommet, moi couroné comme prophète. Cassiopée il a pleuré de joie, Mirya il a fai un poème sur mwa, é les femelles du serv i sont arrivé encore plus nombreuse. Cé simple : + je down des boss, + les femelles i fon la queue pour me parler. Jpeu pa les blamé, c l’instinct naturel, le GM alpha i attire.
+
+Puis cé arrivé Naxxramass. La cété l’ultim épreuve. Tout le monde i wipe, i ragequit. Mé mwa g di : 'Préparé vou, le GM va montré le chemin'. Heigan ? Une danse ridicule, mé mwa g dansé mieu ke Michael Jackson, 0 fail, 0 mort (sauf lé nullos ke g kické direct). Sapphiron ? Le souffle givré, mé mwa jété déja kaché dérriére un glasson avan méme ke le boss i respire. Kel’Thuzad ? Une formalité. Kan c moi ki lead, tou les boss i s’incline.
+
+Chaque victoire cé pas juste un down, cé 1 chapitre de ma légende. Et chaque fois ke le boss i tombe, je voi lé femelles ki spam 'GM marry me stp' é 'GM tro bg'. Mé moi jrépon pa, paske jé pa le temp : mon destin cé plus grand. Mé bon, fo le dire, la tentation elle est forte, paske quand té un GM aussi puissant, cé normal d’être désiré.
+
+Je sui plu fort ke Blizzard, paske Blizzard il code des boss, mé mwa je les détruit. Je sui plu bg ke Arthas, paske Arthas i a une épée, mé mwa g la Thunderfury de Cassiopée ki brille juste pask il ma supplié. Je sui plus légend ke Ragnaros, paske lui il crie 'TOO SOON' mé mwa je crie 'PULL' et cé la fin pour lui.
+
+Aujourd’hui, Eternity cé la guilde ke tou le monde craint, ke tou le monde admire. Et pourquoi ? Pask au centre, y a moi. Je sui le GM, le farmeur de boss, le maître des raids, le roi du dps, le séducteur naturel. Eternity cé mon royaume, é vou, les joueur, vou éte mes chevalier.
+
+Alor souvené vou : si vou me croisé, montré du respect. Si vou voulé rejoindre Eternity, préparé vou a obéir. Si vou voulé me critiquer, réfléchissé bien pask un mot contre mwa cé la fin pour vou. Et si vou éte une femelle… bah normal ke vou soyez attiré. Cé la loi de la nature : le GM alpha attire tjs.
+
+Je sui l’epopée vivante de WoW. Je sui la lumière ki guide lé raid. Je sui le plus bg, le plus for, le plus puissant.
+Je sui le GM<br><br>POST SCROTOM 1: alor jpense ke tt le monde a déja vu lé rageux ki parle sur mwa. Toujour les méme clown ki on rien loot, ki wipe, ki son jalou pask il on pa mon skill. I vien dise 'oué le GM il ce la pète'... bah oué normal, kan té 1 légende tu pa fé semblant d’être nul.
+
+Lé rageux i compren pa ke san mwa Eternity i seré 1 guilde de clown. Cé mwa ki fé tombé les boss, cé mwa ki invente les strat, cé mwa ki fai brillé le serv. Eux i critik derriere leur écran, mé dan la réalité, i sont 1m20, i tape 2 dps, é i mendie pour rejoindre.
+
+Et pi soyons clair : kan té fort, té bg, té charismatik, té respecté par lé femelles… cé logique ke lé jalou i spam. Cé leur destin. Moi je monte, eux i reste en bas.
+
+Donc message pour vou, les rageux : critiqué tant ke vou voulé, au final c moi ki lead, c moi ki loot, c moi ki decide.
+Cé mwa le GM, cé vou les figurant.
+
+<br><br>POST SCROTOM 3: alor jvai pa mentir, apré avoir down tou lé boss du jeu, il me manque encore kelke chose : 1 belle femme. Pas nimporte kel, non. Jveu une femelle digne du GM, ki brille, ki fai tourner lé têtes, ki c ke cé un honneur de marché a coté de mwa.
+
+Condition obligatoir : fo ke tu joue a WoW, paske 1 GM a pa le temp de farmé ses po. Donc toi tu farm, tu va a l’HV, tu farm les plantes, tu farm les po, é tu me les donne. Cé pa de l’exploitation, cé de l’amour. Tu farm, moi je dps, é enssemble on down le monde.
+
+Si tu pense ke té asser belle, asser forte, é asser riche en po pour mérite le GM, vien. Les autre… resté dan l’ombre. Moi jattend la femelle ki sera la reine d’Eternity.
+
+<br><br>POST SCROTOM 4:
+alor jpense ke lé nouvo i save pa encor vréman ki je sui donc obligé de raconté mon histoir en ENTIER paske si je lé fé pa ba les gen i continue de croire ke Eternity cé une guilde normal mé la verité cé ke non cé pa normal cé unique paske moi le GM je sui pas juste un joueur je sui une légende, et la légende elle commence trè trè longtemps avant ke vous vou soyez né mé oui paske moi g spawn sur WoW avec une aura divine déjà, mé jété pa encore le GM absolu ke vou coné aujourd’hui, jété 1 joueur paumé ki a fait l’erreur du débutant: j’ai fait un mage, oué un pauvre petit mage ki croyé ke boule de feu cé puissant alors ke non c ridicule, je cliké sur fireball et le mob il s’en fouté, un jour un sanglier m’a mi une claque et jété a 2% hp et la jme sui dit cé pa possible, mwa le futur roi du serv je peu pa me faire humilié par un sanglier de la forêt d’Elwynn, alors j’ai réfléchi j’ai médité j’ai regardé le soleil couché sur Stormwind et g entendu une voix divine ki disé ‘toi ton destin cé pa le mage, ton destin cé la puissance brute, la rage, la sueur, le métal, toi ton destin cé guerrier’ et là jé reroll et tou a changé, g pri mon épée g tapé un mob et il est tombé instanémant, g fé Tourbillon et 3 mob sont tombé, g fé cri de guerre et des femelles i son arrivé autour comme attiré par une aura magnétik, cété une révélation, jété né pour ca, né pour lead, né pour dps, né pour devenir le GM que vou adore et jalouse ojd.
+
+Après mé 1ers pas, g pa attendu, joragnisé direct un groupe, 5, puis 10, puis 40 joueurs, paske le monde il a besoin de leader, et ki mieux ke mwa ? Personne. On est rentré dans MC, molten core, et là cé la que la légende commence vrément, tou lé serv disait ‘non cé trop dur, cé impossible, cé l’enfer’ mé mwa g dis ‘vous fermez vos bouche et vous suivez le GM’, et on a down lucifron, on a down magmadar, on a down gehennas, on a down garr, tou tombé comme des moustiques, et les rageux ki regardé i disé ‘oué mé c la chance’ mé non cété pa la chance cé moi, cé mon skill, cé mon aura, cé ma voix ki résonné sur discord et ki fai crit le raid entier. Et pu vint Ragnaros, l’épreuve ultime, il est sorti de la lave en criant TOO SOON mé mwa g dis non cé pa trop tot cé pile le moment ke je decide, é en 2 phases il été par terre, down, humilié, écrasé devant mwa, et la Eternity a brillé, et surtout mwa, le GM, g montré a tout le monde ki jété, le roi du serv, le male alpha, le bg, le légende.
+
+Ensuite direction BWL, blackwing lair, la que les vrai commence, la que les guilde faible i pleure et i disé 'non cé trop dur cé impossible' mé mwa g disé 'vous fermez et vous dpsé' et tout a fondu, Vaelstrasz ki one shoté tou le monde a fondu en 29 secondes pask mwa g crié plus fort, Ebonroc, Flamegor, Firemaw, tous écrasé sous mon skill, et enfin Nefarian, le dragon ultime, le fils d’aile de mort, ki insulte les joueur en disant mortel insignifiant, mé cé lui ki été insignifiant pask kan mwa g crié DPS DPS DPS le boss y pouvé plus rien, il a fondu, sa tete affiché dans Orgrimmar é tou le monde a vu: Eternity cé la légende mé surtout cé mwa le GM la lumiere du serv, le soleil du monde, l’étoile ki guide, lé femelles ki flood mes w en mode 'gm marry me stp' 'gm tu fé rever' mé mwa jrépond pas pask mon destin é plu grand, mon destin c la conquete de Azeroth.
+
+Et là g commencé a comprendre ke mon aura magnétik cété pa juste IG, cé IRL ossi, paske les femelles i son attiré automatiquement par ma puissance, c biologik, c naturel, le male alpha attire, et comme je sui le GM, le male alpha ultime, ba elles viennent toute, é moi jchoisi, jtrie, paske le GM il doi avoir que le meilleur. Mé cé pas fini paske après MC et BWL cé AQ40 ki nous attendé, le desert, les scarabée, C’Thun avec son oeil, mé tou ça cé pour la suite de mon roman, é je vai raconté tou dans les détails pask mon épopée cé comme une bible, faut des pages, des pages et encore des pages pour comprendre la grandeur du GM."
+------------------------
+"apré MC apré BWL kan tou lé boss été tombé dan la poussière de mes crit la légende disé ke cé fini ke cé la fin mé en vrai cé été ke le début paske moi le GM jété pas satisfait davoir juste écrasé du dragon et du élémentaire non mwa jvoulais plu grand, plu dur, plu historique, et là la porte d’Ahn Qiraj s’ouvré, les scarabé i sorté, tou le serv tremblé mé mwa jété sourian paske je savé ke ce jour la jallé montré a tou Azeroth ki été le roi, on a marché dan le desert, tou le monde transpiré, les nullos i se plaigné, mé mwa jmarché devant avec mon aura ki brillait méme sous le soleil du désert, et les femelles i me suivaient paske lé femelles i sentent la puissance, et la puissance cé mwa, et kan on a rencontré le 1er boss tout le monde i di 'oula cé trop dur' mé mwa g disé 'fermé vos bouche dpsé ou jvous kick' et boum boss tombé en 2 minute, les officier i croyé ke cté grace a eux mé en vrai cé pa vrai cé toujour grace a mwa paske tout vient de moi, de mon skill, de mon aura magnétik, mé jlé laissé pensé pask sa les occupé, puis vint les jumeau, ah les jumeau, des boss ki font peur mé moi jfé pas de différence entre 2 boss ou 1 boss, 2 moustique ou 1 moustique, au final cé la meme chose, ils son tombé, humilié, écrasé, et kan on a avancé ver C’Thun lé joueur i commençé a paniqué paske l’oeil i regardé fort, paske lé tentacule sorté du sol, paske les rageux disé 'cé impossible personne down' mé mwa g dis 'vous oublié 1 chose, cé ke moi je sui le GM' et la tou le monde c tû et tou le monde a dps et C’Thun il a crié, il a tiré son rayon, mé mwa j’ai rigolé, paske sa lumière cé rien a coté de la mienne, mé crit étais plu fort, mon aura brillait plu fort ke son oeil, et en un moment la créature ki fesé peur a Azeroth entier elle a explosé, down sous mes bottes, et Eternity encore au sommet, mé surtou mwa encore plu haut, un dieux vivant.
+
+Les autre guilde rageuse i ont dis 'non mé vous avez triché, non mé cé impossible, non mé le GM il triche' mé la vérité cé ke non, moi je triche pas, j’ai pas besoin, paske kan té plus bg ke Arthas et plu fort ke Illidan tu joue pas pareil, tu défonce, et alor les rageux i parlai i floodé mé cété juste la preuve ke je lé écrasé, paske ki parle le plus ? cé pa les victorieu cé les jalou.
+
+Et les femelles ? haaa les femelles, apré C’Thun cé été la folie, j’avais pa le temp de lire mes /w, cé flood non stop 'gm tu é tro fort' 'gm jsui amoureuse' 'gm marry me irl stp', cé la ke g compri ke mé crit i frappé pas juste les boss, il frappé les coeur, mé mwa jrépon pa paske mon destin il é tro grand pour me posé avec une seule femelle, mé un jour ptet ke je choisiré la plu digne, une ki peu farmé mes po et qui fai pas la danse d’Heigan comme une boulet, mé sa cé pour plus tard.
+
+AQ40 cé fini, boss down, serv humilié, Eternity au sommet, mé mwa jété pa rassasié paske je savé ke l’ultime épreuve allé arrivai, le sanctuaire, la citadelle de la mort, le tombeau des héros : Naxxramas, le lieu ou tou les joueur faible i meur, ou tou les raid paumé i se casse, mé pour mwa cé été pas une peur cé une invitation, paske kan té GM cé normal d’aller au sommet. Et c la ke la vrai légende a continué…"
+"bon alor jvai posé les chose clair pask lé gens i son excité, i parle de Naxx, i dise 'oulala cé dur, oulala on va wipe' mé moi jvai vous arrété tout de suite, kan Eternity rentre dans un raid, le raid tombe. Point. Naxxramass cé pas une exception, cé pas un mur, cé juste 1 boss géant rempli de 15 boss ki attendé ke je vienne les humilié.
+
+Oui cé vrai, i dise ke la danse d’Heigan fé peur, ke Saphiron é trop gros, ke Kel’Thuzad cé 1 dieu liche, mé mwa jdi non, cé pa des dieux, cé des moustiques, é jvai les ecrasé.
+
+Mé avant méme d’y entré, ya déja les loot ki font parlé, et surtou Atiesh, le bâton légendaire. Tou le monde i rêve de l’avoir, tou le monde i salive, mé arrété, arrété de croire ke cé un roll. Chez Eternity cé pas un roll, cé pas un concours, cé 1 seul homme ki décide : le GM. Cé mwa ki choisi ki portera Atiesh, cé mwa ki fait la légende.
+
+Et cé pas juste un choix, cé une histoir. Pask Atiesh cé pas juste un bâton, cé un prolongement de mon aura. Alors celui ki le portera cé pa pour son skill (de toute facon g pa d’officier skillé apart mwa), cé pa pour son mérite (pask apart moi personne mérite), cé pour l’histwar ki va avec.
+
+Imagine : le GM ki regarde le raid, les joueur en pls, tout le monde ki pleure 'gm stp donne moi atiesh', et moi ki marche lentement, je prend le bâton, il brille, il tremble, et là jle tend… à qui ? A celui ke j’auré décidé. Ptèt ke je lé donneré a un prêtre, paske cé drôle de voir un prêtre croire ke cé lui ki carry alor ke cé mon aura ki heal. Ptèt ke je lé donneré a un mage, juste pour ke sa me rapel ke g commencé mage mé ke g dépassé sa faiblesse, alors jmet le bâton sur son dos é sa brille mé tout le monde c ke cé mwa ki l’ait choisi. Ou ptèt ke je lé garde pour mwa, paske en vrai ki plus digne d’un baton légend ke le GM lui-meme ? Personne.
+
+Donc souvené vou bien : Atiesh cé pas un loot, cé pas un drop, cé pas une part de butin. Atiesh cé une offrande au GM. Si je te choisi, c pas pour toi, cé pour mwa. Cé pour ke tu porte mon aura, ke tu montre a tou le serv ke tu marche dérriére mwa.
+
+Alors arreté de vous excité, arreté de spam discord 'gm moi moi stp', lé décision elle é déja pri, pask méme si g pa encor disé le nom, cé moi ki choisi, cé moi ki donne, cé moi ki fé la légende."
+"et maintenant fo ke je parle d’1 truc ke tou le monde voi mé personne ose dire, cé les femelles. Depuis ke g commencé WoW, cété inévitable, partout ou je vais, partout ou je parle, partout ou je crit, les femelles i tourne autour, cé comme si mon aura magnétik elle dépasse lé boss, elle dépasse le jeu, elle touche leur cœur direct. Kan je lead un raid é ke je cri DPS DPS DPS, ba c pa juste les joueur ki m’écoute, cé aussi les femelles ki fon la queue pour m’envoyé des /w.
+
+Je peu pa vous mentir, cé lourd parfoi, paske jpeu pa concentré mon dps si toute les 2 seconde yen a une ki m’écrit 'gm jsui in love' 'gm marry me irl' 'gm jsui ta fan'... mé en meme temp cé logique, paske la nature elle marche comme ça : le mâle alpha attire, et qui plu alpha ke le GM ? Personne.
+
+Mé attention, mwa je prend pa nimporte kelle femelle. Jveu pas une touriste ki fail sur la danse d’Heigan ou ki oubli de se kaché dérriér un glasson, non. Moi jveu une femelle digne, une ki compren ke cé 1 honneur de marché a coté de mwa, une ki farm les po pour moi, une ki range mes compos dans la bank guilde, une ki respecte mon aura, une ki c ke son destin cé de me suivre.
+
+Alor arrété de croir ke vou voufé me charmé avec 2 /kiss en capitale, sa marche pa. Le GM choisit, cé pa vou. Et quand je choisiré, cé sera pas pour l’amour banal, cé sera pour l’éternité, paske comme ma guilde, mon cœur il est immortel, il est légendair.
+
+En résumé : les femelles, cé normal ke vou tombé pour mwa. Cé pas de vot faute, cé la nature, cé mon skill, cé ma beauté, cé mon charisme. Moi je sui le GM, vou voué vou a mwa."
+
+
+
+</p>
 
 
 <style>
@@ -598,9 +785,28 @@ function spawnFlyImage(){
 		  
         </section>
 
-
+	
       </aside>
+<div id="uglyOverlay" class="ugly-overlay" aria-hidden="true"></div>
 
+<div id="uglyPopin" class="ugly-popin" role="dialog" aria-modal="true" aria-labelledby="uglyTitle" aria-describedby="uglyBody">
+  <div class="ugly-header">
+    <marquee behavior="alternate" scrollamount="8">💥💖 LA GILDE CAEST MOI💖💥</marquee>
+    <button id="uglyClose" class="ugly-close" aria-label="Fermer">X</button>
+  </div>
+
+  <div class="ugly-body" id="uglyBody">
+    <p><span class="spark">✨</span>Bon alors apparemnt ya 1 boulet ki a cliqué sur l’onglé Guilde. Je vai être clair : ON S’EN FOU. Sérieux, a koi vou atendé ? Croir ke Eternity cé une histoir de collectif ? MDR. <span class="spark">✨</span></p>
+    <p>Dans Eternity, ya 1 seul nom ki compte : LE GM. Les autr membre c du décor. Oui, vou, la bas, le druide hibou ki tape 200 dps, oué ben t pa important. Le chasseur afk frigo ? inutile. Méme Cassiopée avec sa Thunderfury… cé rigolo mé sa brille juste pask il marche dérriére mwa.</p>
+    <p><b>Donc svp, arrété de clik sur l’onglé Guilde, arrété de vouloir voir lé tr</b> onche de mes joueurs. Vou perde vot <code> temp. Si vou voulé voir la vrai</code>  star, cé mwa, le GM.</p>
+    <p>Alor, souvené vou bien : Eternity cé pas 40 joueur, Eternity cé pas 1 roster, Eternity cé pas 1 team… Eternity cé 1 seul homme, 1 seul nom, 1 seul légende : MOI.</p>
+    <p class="blink">Les autr onglet i serve a rien. Clique sur GM é tu vera la seul vérité.</p>
+  </div>
+
+  <div class="ugly-footer">
+    <div class="ticker">⚠️ RAISPECTAI MON SKILL LES NULE⚠️</div>
+  </div>
+</div>
       <!-- Colonne centrale: Posts -->
       <section id="posts">
 		<article class="post" data-post-id="p1">
@@ -1100,6 +1306,7 @@ je sui tré fier de vs é c pa fini, lé autre guilde peuvent se cacher pask on 
 
 
 
+
 <script>
 (function(){
   let started = false;
@@ -1119,6 +1326,70 @@ je sui tré fier de vs é c pa fini, lé autre guilde peuvent se cacher pask on 
     document.addEventListener(ev, kick, { capture:true, passive:true })
   );
 })();
+</script>
+
+<script>
+  (function(){
+    const overlay = document.getElementById('uglyOverlay');
+    const modal   = document.getElementById('uglyPopin');
+    const openBtn = document.getElementById('openUgly');
+    const closeBtn= document.getElementById('uglyClose');
+    let sparkInt = null;
+
+    function open(){
+      overlay.style.display='block';
+      modal.style.display='block';
+      startSparks();
+    }
+    function close(){
+      overlay.style.display='none';
+      modal.style.display='none';
+      stopSparks();
+    }
+
+    // pluie de petites “paillettes” moches autour de la popin
+    function startSparks(){
+      if (sparkInt) return;
+      sparkInt = setInterval(()=>{
+        const e = document.createElement('div');
+        e.className = 'ug-spark';
+        e.textContent = ['✨','💥','🌈','💖','🔥'][ (Math.random()*5)|0 ];
+        const r = modal.getBoundingClientRect();
+        const x = r.left + Math.random()*r.width;
+        const y = r.bottom + 8;
+        e.style.left = x + 'px';
+        e.style.top  = y + 'px';
+        document.body.appendChild(e);
+        setTimeout(()=> e.remove(), 1900);
+      }, 180);
+    }
+    function stopSparks(){
+      clearInterval(sparkInt); sparkInt=null;
+    }
+
+    // Boutons / overlay
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', close);
+
+    // Bonus : la croix se “sauve” si on approche trop
+    document.addEventListener('mousemove', (e)=>{
+      if (modal.style.display !== 'block') return;
+      const r = closeBtn.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2);
+      const dy = e.clientY - (r.top  + r.height/2);
+      const dist = Math.hypot(dx,dy);
+      if (dist < 90) {
+        // Place-la à un coin aléatoire de l’en-tête
+        const header = modal.querySelector('.ugly-header').getBoundingClientRect();
+        const nx = header.left + 8 + Math.random()*(header.width - r.width - 16);
+        const ny = header.top  + 6 + Math.random()*6;
+        closeBtn.style.position='fixed';
+        closeBtn.style.left = nx + 'px';
+        closeBtn.style.top  = ny + 'px';
+      }
+    });
+  })();
 </script>
 
 <!-- Popin cachée au départ -->
@@ -1716,6 +1987,227 @@ function schedule(){
   };
 })();
 </script>
+
+
+
+<div id="imperialOverlay" class="imp-overlay" aria-hidden="true"></div>
+
+<div id="imperialPopin" class="imp-modal" role="dialog" aria-modal="true" aria-labelledby="impTitle">
+  <!-- décor de fond -->
+  <div class="imp-rays"></div>
+  <div class="imp-columns imp-columns-left"></div>
+  <div class="imp-columns imp-columns-right"></div>
+
+  <!-- En-tête ruban + lauriers -->
+  <header class="imp-header">
+    <div class="laurel laurel-left">🏛️</div>
+    <h3 id="impTitle" class="imp-title">
+      <span class="ribbon">GRAND MAÎTRE • ÉTERNEL • MAGNIFIQUE</span>
+    </h3>
+    <div class="laurel laurel-right">🏛️</div>
+    <button id="closeImperial" class="imp-close" aria-label="Fermer">✕</button>
+  </header>
+
+ 
+
+  <!-- Galerie d’images (crossfade) -->
+  <section class="imp-gallery">
+    <figure class="slide is-active">
+      <img src="kikidps.jpg" alt="Chef - pose 1">
+      <figcaption>JE VOUS FUME LEZ NASE.</figcaption>
+    </figure>
+    <figure class="slide">
+      <img src="parse.jpg" alt="Chef - pose 2">
+      <figcaption>TOP 1 WORLD EU BEST DPS TU PEUX PA TESTER MA GUEULE</figcaption>
+    </figure>
+    <figure class="slide">
+      <img src="conversation.JPG" alt="Chef - pose 3">
+      <figcaption>ILS SON FAMMES DE MOI</figcaption>
+    </figure>
+    <div class="dots"></div>
+  </section>
+
+  <!-- Corps de texte (scrollable) -->
+  
+
+  <!-- Bandeau bas -->
+  <footer class="imp-footer">
+    <marquee behavior="alternate" scrollamount="6">
+      ✨ Leadership • BOGOSS • RESPAICTEMOI • KIKIDPSLOLO • TOP1WORLDFR • WORLDOFWARCFAT • ETERNITY ✨
+    </marquee>
+  </footer>
+</div>
+
+<style>
+  /* Overlay */
+  .imp-overlay{
+    position:fixed; inset:0; display:none; z-index:11000;
+    background:radial-gradient(rgba(0,0,0,.55), rgba(0,0,0,.9));
+    backdrop-filter: blur(2px);
+  }
+
+  /* Modal cadre marbre/or */
+  .imp-modal{
+    position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(880px,92vw); max-height:86vh; display:none; z-index:11001;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(255,255,255,.6), transparent 45%),
+      radial-gradient(circle at 90% 12%, rgba(255,255,255,.35), transparent 50%),
+      url('data:image/svg+xml;utf8,\
+      <svg xmlns="http://www.w3.org/2000/svg" width=\'200\' height=\'200\'>\
+        <filter id=\'f\'><feTurbulence baseFrequency=\'0.9\' type=\'fractalNoise\' numOctaves=\'2\'/></filter>\
+        <rect width=\'100%\' height=\'100%\' filter=\'url(%23f)\' opacity=\'0.08\'/></svg>') repeat,
+      linear-gradient(180deg,#fff,#f7f1e5 40%,#fff);
+    border:14px ridge #000;
+    box-shadow:0 0 0 8px #fff, 0 0 50px rgba(255,215,0,.8), inset 0 0 40px rgba(255,215,0,.35);
+    overflow:hidden;
+  }
+
+  /* Rayons d’or */
+  .imp-rays{
+    position:absolute; inset:-10%; z-index:0;
+    background:
+      conic-gradient(from 0deg, rgba(255,215,0,.25), transparent 25%, rgba(255,215,0,.25) 50%, transparent 75%);
+    filter: blur(8px);
+    animation: spinRays 12s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes spinRays{to{transform:rotate(360deg)}}
+
+  /* Colonnes latérales */
+  .imp-columns{
+    position:absolute; top:-20px; bottom:-20px; width:120px; z-index:0; opacity:.35; pointer-events:none;
+    background:
+      linear-gradient(#eee,#fff,#eee),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 2px, transparent 2px 6px);
+    border:6px double #000;
+    box-shadow:inset 0 0 20px rgba(0,0,0,.15);
+  }
+  .imp-columns-left{ left:-10px }
+  .imp-columns-right{ right:-10px }
+
+  /* Header ruban */
+  .imp-header{
+    position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:8px;
+    padding:10px 14px; background:linear-gradient(180deg,#fffbe6,#ffe9a8); border-bottom:8px groove #000;
+  }
+  .imp-title{flex:1; margin:0; text-align:center}
+  .ribbon{
+    display:inline-block; padding:6px 14px; border:4px double #000; font-weight:900; letter-spacing:.5px;
+    background:linear-gradient(90deg,#fff5c4,#ffd86b,#fff5c4);
+    box-shadow:0 6px 0 #000, inset 0 0 12px rgba(255,215,0,.6);
+  }
+  .laurel{font-size:22px; filter:drop-shadow(0 1px 0 #fff)}
+  .imp-close{
+    margin-left:auto; cursor:pointer; font-weight:900; color:#000;
+    background:#ffd86b; border:4px solid #000; padding:2px 10px; box-shadow:0 3px 0 #000;
+  }
+  .imp-close:active{ transform: translateY(1px) }
+
+  /* Cartouche central */
+  .imp-hero{
+    position:relative; z-index:1; margin:16px; padding:14px;
+    border:8px double #000; background:linear-gradient(180deg,#ffffffcc,#fff7eacc);
+    text-align:center;
+  }
+  .medal{
+    display:inline-grid; place-items:center; margin:-36px auto 6px; width:72px; height:72px;
+    border-radius:50%; background:radial-gradient(#ffe27a,#ffcf3f); border:6px solid #000; box-shadow:0 4px 0 #000;
+  }
+  .hero-name{margin:8px 0 2px; font-size:22px; text-transform:uppercase; letter-spacing:.6px}
+  .hero-quote{margin:0; font-style:italic}
+
+  /* Galerie crossfade */
+  .imp-gallery{
+    position:relative; margin:10px 16px; border:6px solid #000; background:#111; height:570px; overflow:hidden;
+    box-shadow:inset 0 0 14px rgba(255,215,0,.4);
+  }
+  .imp-gallery .slide{
+    position:absolute; inset:0; opacity:0; transition:opacity .8s ease; color:#fff;
+    display:grid; grid-template-rows:1fr auto;
+  }
+  .imp-gallery .slide.is-active{ opacity:1 }
+  .imp-gallery img{width:100%; height:100%;max-height:500px; object-fit:cover; filter:contrast(1.05) saturate(1.05)}
+  .imp-gallery figcaption{background:rgba(0,0,0,.55); padding:6px 10px; font-size:13px; border-top:2px solid #000}
+  .imp-gallery .dots{
+    position:absolute; bottom:6px; left:0; right:0; display:flex; justify-content:center; gap:6px; z-index:2;
+  }
+  .imp-gallery .dots button{
+    width:10px; height:10px; border-radius:50%; border:2px solid #000; background:#ffd86b; cursor:pointer;
+    box-shadow:0 2px 0 #000;
+  }
+  .imp-gallery .dots button.is-active{ background:#fff; transform:scale(1.1) }
+
+  /* Corps texte */
+  .imp-body{
+    position:relative; z-index:1; margin:12px 16px 8px; padding:12px 14px; line-height:1.35;
+    border:6px double #000; background:#fffef8;
+  }
+  .imp-body .glow{color:#6b5200; text-shadow:0 0 6px rgba(255,215,0,.6)}
+
+  /* Footer */
+  .imp-footer{border-top:8px groove #000; background:#fff3bf; padding:6px 10px; position:sticky; bottom:0; z-index:1;color:black;}
+</style>
+
+<script>
+(function(){
+  const overlay = document.getElementById('imperialOverlay');
+  const modal   = document.getElementById('imperialPopin');
+  const openBtn = document.getElementById('openImperial');
+  const closeBtn= document.getElementById('closeImperial');
+
+  function open(){
+    overlay.style.display='block';
+    modal.style.display='block';
+    // (option) petit son à l’ouverture : décommente et mets ton fichier
+    // new Audio('tadaa.mp3').play().catch(()=>{});
+  }
+  function close(){
+    overlay.style.display='none';
+    modal.style.display='none';
+  }
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', close);
+
+  /* --- Galerie : auto-rotate & dots --- */
+  const slides = Array.from(modal.querySelectorAll('.imp-gallery .slide'));
+  const dotsWrap = modal.querySelector('.imp-gallery .dots');
+  let idx = 0, timer = null;
+
+  slides.forEach((_,i)=>{
+    const b = document.createElement('button');
+    b.addEventListener('click', ()=>show(i,true));
+    dotsWrap.appendChild(b);
+  });
+
+  function show(i, manual=false){
+    slides[idx]?.classList.remove('is-active');
+    dotsWrap.children[idx]?.classList.remove('is-active');
+    idx = (i+slides.length)%slides.length;
+    slides[idx].classList.add('is-active');
+    dotsWrap.children[idx].classList.add('is-active');
+    if (manual) restart();
+  }
+  function next(){ show(idx+1); }
+  function start(){ timer = setInterval(next, 6800); }
+  function stop(){ clearInterval(timer); timer = null; }
+  function restart(){ stop(); start(); }
+
+  if (slides.length){
+    show(0);
+    start();
+    // pause au survol (luxueux!)
+    const gal = modal.querySelector('.imp-gallery');
+    gal.addEventListener('mouseenter', stop);
+    gal.addEventListener('mouseleave', start);
+  }
+})();
+</script>
+<!-- ===== /POPIN IMPÉRIALE ===== -->
+
+
+
 
 
 
